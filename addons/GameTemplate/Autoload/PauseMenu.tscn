@@ -131,29 +131,29 @@ custom_constants/separation = 1
 [node name="Resume" parent="Control/MarginContainer/Panel/MarginContainer/VBoxContainer" groups=[
 "Pause",
 ] instance=ExtResource( 1 )]
-margin_right = 168.0
+margin_right = 872.0
 text = "Resume"
 
 [node name="Restart" parent="Control/MarginContainer/Panel/MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
 margin_top = 20.0
-margin_right = 168.0
+margin_right = 872.0
 margin_bottom = 39.0
 text = "Restart"
 
 [node name="Options" parent="Control/MarginContainer/Panel/MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
 margin_top = 40.0
-margin_right = 168.0
+margin_right = 872.0
 margin_bottom = 59.0
 text = "Options"
 
 [node name="MainMenu" parent="Control/MarginContainer/Panel/MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
 margin_top = 60.0
-margin_right = 168.0
+margin_right = 872.0
 margin_bottom = 79.0
 text = "Main Menu"
 
 [node name="Exit" parent="Control/MarginContainer/Panel/MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
 margin_top = 80.0
-margin_right = 168.0
+margin_right = 872.0
 margin_bottom = 99.0
 text = "Exit"

@@ -32,8 +32,12 @@ func set_paused(value:bool)->void:
 func _ready()->void:
 	pause_mode = Node.PAUSE_MODE_PROCESS										#when pause menu allows reading inputs
 
-func _input(event)->void:												#used to get back in menus
+func _unhandled_input(event)->void:												#used to get back in menus
 	if event.is_action_pressed("ui_cancel"):
+		# menu not available unless player is focused
+		var is_player_focus = get_node("/root/TopLevel/GameManager").is_player_focus()
+		if !is_player_focus:
+			return
 		if Languages:
 			set_languages(false)
 		elif Controls:

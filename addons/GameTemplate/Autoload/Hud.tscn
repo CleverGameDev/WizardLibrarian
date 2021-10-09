@@ -9,7 +9,7 @@ onready var hp: = $CanvasLayer/GUI/MarginContainer/VBoxContainer/Top/HP
 onready var score: = $CanvasLayer/GUI/MarginContainer/VBoxContainer/Top/Score
 onready var gui: = $CanvasLayer/GUI
 
-var visible: = true setget set_visible
+var visible: = false setget set_visible
 
 func _ready()->void:
 	gui.visible = visible

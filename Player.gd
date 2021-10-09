@@ -7,24 +7,43 @@ var facingDir = Vector2()
 
 onready var anim = $PlayerSprite
 
+# TODO: move this to its own object/script?
+var carrying_books = []
+
+var GameManager
+
+var object_type = "Player"
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print("and player pos:")
-	print(position.y)
-	print("and player z index:")
-	print(z_index)
-	pass # Replace with function body.
+	GameManager = get_parent()
+
+func open_nearby_bookcase():
+	for body in $PickupArea.get_overlapping_bodies():
+		if (body.object_type == "Bookcase"):
+			GameManager.view_bookcase(body)
+			break
+
+func pick_up_nearby_objects():
+	for body in $PickupArea.get_overlapping_bodies():
+			if (body.object_type == "Book"):
+				carrying_books.append(body.attributes["id"])
+				body.free()
+
+func _input(event)->void:
+	if event.is_action_pressed("ui_accept"):
+		if GameManager.is_player_focus():
+			pick_up_nearby_objects()
+			open_nearby_bookcase()
+			get_tree().set_input_as_handled()
 
 func _physics_process (delta):
-	if Input.is_action_just_pressed("ui_accept"):
-		for body in $PickupArea.get_overlapping_bodies():
-				print("found body!!!")
-				print(body.get_name())
-				#body.free()
-		#get last collide;
-
 	vel = Vector2()
 	# inputs
+	if (GameManager.is_player_focus()):
+		move_player()
+
+func move_player():
 	if Input.is_action_pressed("ui_up"):
 		$PickupArea.position.x = 0
 		$PickupArea.position.y = -4

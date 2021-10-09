@@ -9,8 +9,11 @@ MainSortedScene script instantiates objects at start of game.
 Player is controlled via movement.
 TODO: inventory system
 
-BookOnGround.tscn is a book ready to be instantiated. 
-TODO: load res://data/books.json and apply attributes from a random book
+BookManager loads books from a json. Contains utility functions for getting a book, etc. Get the book definition here, and assign to a Book.tscn
+
+Utilities contains a random number generator
+
+Book.tscn is a book ready to be instantiated. 
 TODO: make generic sprite pieces that can be colored
 
 Bookshelf.tscn is where you will store your books, ready to be instantiated.
