@@ -2,13 +2,11 @@ extends StaticBody2D
 
 var object_type = "Bookshelf"
 
-# contains all the books in the shelf
-# book objects live under $ZoomedShelf/Books
-var books = []
 var sprites = []
 var zoomed_sprites = []
 var my_index = 0
 var recently_unshelved = false
+var selected_book_index = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -26,16 +24,18 @@ func unshelve_book(id):
 
 func shelve_book(id):
 	var BookManager = get_node("/root/TopLevel/GameManager/BookManager")
-	var book = BookManager.get_book_by_id(id)
-	books.append(book)
+	var book_attributes = BookManager.get_book_by_id(id)
 	var book_scene = preload("res://BookOnShelf.tscn")
 	var new_book = book_scene.instance()
+	new_book.assign_attributes(book_attributes)
 	$ZoomedShelf/Books.add_child(new_book)
 	redraw_zoomed_books()
 	reset_sprite()
 
 func redraw_zoomed_books():
-	var i = -books.size()/2
+	var num_books = $ZoomedShelf/Books.get_child_count()
+
+	var i = -num_books/2
 	for book in $ZoomedShelf/Books.get_children():
 		
 		var size = (book.get_children()[0].region_rect.size)
@@ -45,22 +45,28 @@ func redraw_zoomed_books():
 	pass
 
 func reset_sprite():
+	var num_books = $ZoomedShelf/Books.get_child_count()
+
 	for sprite in sprites:
 		sprite.visible = false
 
-	if books.size() > 5:
+	if num_books > 5:
 		$ManyBooksSprite.visible = true
-	elif books.size() > 2:
+	elif num_books > 2:
 		$SomeBooksSprite.visible = true
-	elif books.size() > 0:
+	elif num_books > 0:
 		$FewBooksSprite.visible = true
-	elif my_index % 2 == 0:
+	elif num_books % 2 == 0:
 		$EmptySpriteL.visible = true
 	else:
 		$EmptySpriteR.visible = true
 
 # show a big bookshelf zoomed in
 func zoom_in():
+	var num_books = $ZoomedShelf/Books.get_child_count()
+	selected_book_index = floor(num_books/2)
+	if selected_book_index < num_books:
+		$ZoomedShelf/Books.get_children()[selected_book_index].select()
 	recently_unshelved = false
 	for sprite in sprites:
 		sprite.visible = false
@@ -68,11 +74,11 @@ func zoom_in():
 	$ZoomedShelf/Books.visible = true
 	for sprite in zoomed_sprites:
 		sprite.visible = false
-	if books.size() > 15:
+	if num_books > 15:
 		$ZoomedShelf/ZoomedShelfWoodLots.visible = true
-	elif books.size() > 10:
+	elif num_books > 10:
 		$ZoomedShelf/ZoomedShelfWoodMany.visible = true
-	elif books.size() > 5:
+	elif num_books > 5:
 		$ZoomedShelf/ZoomedShelfWoodSome.visible = true
 	else:
 		$ZoomedShelf/ZoomedShelfWoodFew.visible = true
@@ -91,6 +97,27 @@ func select():
 
 func unselect():
 	modulate = Color(1,1,1)
+
+func shift_selected_book_index(delta):
+	var num_books = $ZoomedShelf/Books.get_child_count()
+	if num_books == 0:
+		return
+	selected_book_index = int(selected_book_index) % num_books
+	$ZoomedShelf/Books.get_children()[selected_book_index].unselect()
+	selected_book_index = (selected_book_index + delta) % num_books
+	$ZoomedShelf/Books.get_children()[selected_book_index].select()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+func _input(event)->void:
+	if !$ZoomedShelf.visible || $ZoomedShelf/Books.get_children().size() == 0:
+		return
+	# selecting a book on the shelf
+	if event.is_action_pressed("ui_left"):
+		shift_selected_book_index(-1)
+		get_tree().set_input_as_handled()
+	elif event.is_action_pressed("ui_right"):
+		shift_selected_book_index(1)
+		get_tree().set_input_as_handled()
+

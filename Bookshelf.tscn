@@ -38,6 +38,7 @@ region_enabled = true
 region_rect = Rect2( 90, 78, 9, 5 )
 
 [node name="ZoomedShelf" type="Node2D" parent="."]
+visible = false
 
 [node name="Books" type="Node2D" parent="ZoomedShelf"]
 
