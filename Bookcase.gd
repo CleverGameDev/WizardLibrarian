@@ -20,28 +20,10 @@ func _ready():
 	for index in range(NUM_BOOKSHELVES):
 		var new_bookshelf = bookshelf_scene.instance()
 		new_bookshelf.my_index = index
-		new_bookshelf.position = Vector2(-5.5 + 10*(index%2),-19.5+floor(index/2)*6)
-#		if index == 0:#
-#			new_bookshelf.position = Vector2(-5.5,-19.5)#
-#		elif index == 1:
-#			new_bookshelf.position = Vector2(5.5, -19.5)
-#		elif index == 2:
-#			new_bookshelf.position = Vector2(-5.5, -13.5)
-#		elif index == 3:
-#			new_bookshelf.position = Vector2(5.5, -13.5)
-#		elif index == 4:
-#			new_bookshelf.position = Vector2(-5.5, -7.5)
-#		elif index == 5:
-#			new_bookshelf.position = Vector2(5.5, -7.5)
-#		elif index == 6:
-#			new_bookshelf.position = Vector2(-5.5, -1.5)
-#		elif index == 7:
-#			new_bookshelf.position = Vector2(5.5, -1.5)
+		new_bookshelf.position = Vector2(-5.5 + 11*(index%2),-19.5+floor(index/2)*6)
 			
 		new_bookshelf.reset_sprite()
-		# TODO: set bookshelf position
 		bookshelves.append(new_bookshelf)
-		print(new_bookshelf.position.x)
 		add_child(new_bookshelf)
 
 	pass # Replace with function body.

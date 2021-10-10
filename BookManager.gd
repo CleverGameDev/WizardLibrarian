@@ -40,7 +40,7 @@ func instantiate_new_book_at(pos):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	BookScene = preload("res://Book.tscn")
+	BookScene = preload("res://BookOnGround.tscn")
 	Utilities = get_node("/root/TopLevel/GameManager/Utilities")
 
 	all_books = load_json_file("res://data/books.json")["books"]
