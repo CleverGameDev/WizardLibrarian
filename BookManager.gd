@@ -7,9 +7,9 @@ var all_books
 # allow us to easily look up a book by id
 var id_to_book_index
 # what has been shelved already
-var used_ids = []
+var used_ids = {}
 # allow us to easily grab an unused book
-var unused_ids = []
+var unused_ids = {}
 
 var BookScene
 var Utilities
@@ -29,8 +29,14 @@ func load_json_file(path):
 	return obj
 
 func instantiate_new_book_at(pos):
+	if unused_ids.size() == 0:
+		print("out of books!!!!")
 	var new_book = BookScene.instance()
-	var book_attributes = get_book_by_id("book_ars_moriendi")
+	# TODO: use utilities rand
+	var new_id = unused_ids.keys()[ randi() % unused_ids.size() ]
+	used_ids[new_id] = true
+	unused_ids.erase(new_id)
+	var book_attributes = get_book_by_id(new_id)
 	new_book.assign_attributes(book_attributes)
 	new_book.set_sprite(Utilities.get_random_integer(1,3))
 	new_book.position.x = pos[0]
@@ -47,9 +53,10 @@ func _ready():
 
 	id_to_book_index = {}
 	var index = 0
-	var unused_ids = []
 	for book in all_books:
+		print(book)
 		id_to_book_index[book["id"]] = index
+		unused_ids[book["id"]] = true
 		index += 1
 
 func get_book_by_id(book_id):

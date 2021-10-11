@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Bookshelf.gd" type="Script" id=1]
 [ext_resource path="res://graphics/tilesetformattedupdate1.png" type="Texture" id=2]
 [ext_resource path="res://graphics/bookshelf_zoomed.png" type="Texture" id=3]
+[ext_resource path="res://text/TextTheme.tres" type="Theme" id=4]
 
 [node name="Bookshelf" type="StaticBody2D"]
 script = ExtResource( 1 )
@@ -39,6 +40,7 @@ region_rect = Rect2( 90, 78, 9, 5 )
 
 [node name="ZoomedShelf" type="Node2D" parent="."]
 visible = false
+z_index = 4
 
 [node name="Books" type="Node2D" parent="ZoomedShelf"]
 
@@ -73,3 +75,18 @@ z_index = 3
 texture = ExtResource( 3 )
 region_enabled = true
 region_rect = Rect2( 15, 13, 84, 3 )
+
+[node name="CurrentBookLabel" type="Label" parent="ZoomedShelf"]
+margin_left = -150.0
+margin_top = 27.0
+margin_right = 148.0
+margin_bottom = 192.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "asdfasdfasdfsdfasdfa"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -65,6 +65,7 @@ func reset_sprite():
 func zoom_in():
 	var num_books = $ZoomedShelf/Books.get_child_count()
 	selected_book_index = floor(num_books/2)
+	redraw_book_label()
 	if selected_book_index < num_books:
 		$ZoomedShelf/Books.get_children()[selected_book_index].select()
 	recently_unshelved = false
@@ -83,6 +84,17 @@ func zoom_in():
 	else:
 		$ZoomedShelf/ZoomedShelfWoodFew.visible = true
 	
+func redraw_book_label():
+	print("putting desc")
+	print($ZoomedShelf/CurrentBookLabel.visible)
+	print($ZoomedShelf/CurrentBookLabel.rect_position.x)
+	if selected_book_index < $ZoomedShelf/Books.get_child_count():
+		var description = $ZoomedShelf/Books.get_children()[selected_book_index].attributes["description"]
+		print(description)
+		$ZoomedShelf/CurrentBookLabel.text = description
+	else:
+		print("blank")
+		$ZoomedShelf/CurrentBookLabel.text = ""
 
 func zoom_out():
 	if recently_unshelved:
@@ -106,6 +118,7 @@ func shift_selected_book_index(delta):
 	$ZoomedShelf/Books.get_children()[selected_book_index].unselect()
 	selected_book_index = (selected_book_index + delta) % num_books
 	$ZoomedShelf/Books.get_children()[selected_book_index].select()
+	redraw_book_label()
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
