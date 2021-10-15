@@ -47,10 +47,14 @@ func instantiate_new_book_at(pos):
 	books_on_floor[new_id] = true
 	return new_book
 
+func shelve_book(book_id):
+	books_on_floor.erase(book_id)
+	# maybe store where?
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	BookScene = preload("res://BookOnGround.tscn")
+	BookScene = preload("res://objects/BookOnGround.tscn")
 	Utilities = get_node("/root/TopLevel/GameManager/Utilities")
 
 	all_books = load_json_file("res://data/books.json")["books"]

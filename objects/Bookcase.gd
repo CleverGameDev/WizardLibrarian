@@ -16,7 +16,7 @@ var current_shelf_index = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var bookshelf_scene = preload("res://Bookshelf.tscn")
+	var bookshelf_scene = preload("res://objects/Bookshelf.tscn")
 	for index in range(NUM_BOOKSHELVES):
 		var new_bookshelf = bookshelf_scene.instance()
 		new_bookshelf.my_index = index
@@ -43,7 +43,7 @@ func zoom_out():
 	bookshelves[current_shelf_index].unselect()
 	set_as_toplevel(false)
 	position = old_position
-	scale = Vector2(1,1)
+	scale = Vector2(2,2)
 	#$ZoomedIn.visible = false
 
 func zoom_current_bookshelf():

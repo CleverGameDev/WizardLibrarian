@@ -21,7 +21,7 @@ func _ready():
 func instantiate_objects():
 	for pos in [[500,300], [480,250], [520,230]]:
 		add_child($BookManager.instantiate_new_book_at(pos))
-	var bookcase_scene = preload("res://Bookcase.tscn")
+	var bookcase_scene = preload("res://objects/Bookcase.tscn")
 	var bookcase1 = bookcase_scene.instance()
 	bookcase1.position.x = 550
 	bookcase1.position.y = 350
@@ -49,11 +49,10 @@ func view_bookcase(body):
 # triggered when we shelve a book
 func emit_shelve_book_event(book_id):
 	current_bookcase.shelve_book(book_id)
+	$BookManager.shelve_book(book_id)
 	# if we have no books on floor, do a new quest
-#	if $Player.carrying_books.size() == 0 && BookManager.books_on_floor.size() == 0:
-#		has_just_shelved_last_book = true#
-#		yield(get_tree().create_timer(4.0), "timeout")
-#		add_npc()
+	if $Player.carrying_books.size() == 0 && $BookManager.books_on_floor.size() == 0:
+		has_just_shelved_last_book = true
 
 func focus_out_of_bookshelf():
 	$BookcasePopupNode.visible = true

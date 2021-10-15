@@ -1,7 +1,7 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://graphics/townfolk1_m.png" type="Texture" id=1]
-[ext_resource path="res://BookManager.gd" type="Script" id=2]
+[ext_resource path="res://objects/BookManager.gd" type="Script" id=2]
 [ext_resource path="res://graphics/rpg indoor tileset expansion 1 trans.png" type="Texture" id=3]
 [ext_resource path="res://graphics/tilesetformattedupdate1.png" type="Texture" id=4]
 [ext_resource path="res://Player.gd" type="Script" id=5]
@@ -278,6 +278,9 @@ extents = Vector2( 8, 4 )
 [sub_resource type="RectangleShape2D" id=22]
 extents = Vector2( 4, 2 )
 
+[sub_resource type="RectangleShape2D" id=23]
+extents = Vector2( 15.5637, 29.3808 )
+
 [node name="TopLevel" type="Node2D"]
 
 [node name="GameManager" type="YSort" parent="."]
@@ -401,3 +404,16 @@ __meta__ = {
 
 [node name="QuestManager" type="Node" parent="GameManager"]
 script = ExtResource( 9 )
+
+[node name="Desk" type="StaticBody2D" parent="GameManager"]
+
+[node name="Sprite" type="Sprite" parent="GameManager/Desk"]
+position = Vector2( 364.101, 217.873 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 91, 116, 16, 32 )
+
+[node name="DeskCollision" type="CollisionShape2D" parent="GameManager/Desk"]
+position = Vector2( 363.451, 220.472 )
+shape = SubResource( 23 )

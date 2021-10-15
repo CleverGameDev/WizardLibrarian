@@ -1,19 +1,19 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://graphics/rpg indoor tileset expansion 1 trans.png" type="Texture" id=1]
-[ext_resource path="res://Book.gd" type="Script" id=2]
-[ext_resource path="res://graphics/bookshelf_zoomed.png" type="Texture" id=3]
+[ext_resource path="res://graphics/bookshelf_zoomed.png" type="Texture" id=1]
+[ext_resource path="res://graphics/rpg indoor tileset expansion 1 trans.png" type="Texture" id=2]
+[ext_resource path="res://objects/Book.gd" type="Script" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 11, 14 )
 
 [node name="BookOnGround" type="StaticBody2D"]
-script = ExtResource( 2 )
+script = ExtResource( 3 )
 
 [node name="ClosedSprite" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 51, 178, 11, 14 )
 
@@ -23,18 +23,18 @@ shape = SubResource( 1 )
 [node name="OpenSprite" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 48, 132, 15, 12 )
 
 [node name="OpenFaceDownSprite" type="Sprite" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
-texture = ExtResource( 1 )
+texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 16, 132, 15, 12 )
 
 [node name="SpineSprite" type="Sprite" parent="."]
-texture = ExtResource( 3 )
+texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 36, 3, 3, 9 )

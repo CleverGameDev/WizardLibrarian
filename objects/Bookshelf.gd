@@ -25,7 +25,7 @@ func unshelve_book(id):
 func shelve_book(id):
 	var BookManager = get_node("/root/TopLevel/GameManager/BookManager")
 	var book_attributes = BookManager.get_book_by_id(id)
-	var book_scene = preload("res://BookOnShelf.tscn")
+	var book_scene = preload("res://objects/BookOnShelf.tscn")
 	var new_book = book_scene.instance()
 	new_book.assign_attributes(book_attributes)
 	$ZoomedShelf/Books.add_child(new_book)

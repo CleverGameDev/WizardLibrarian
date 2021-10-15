@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://graphics/bookshelf_zoomed.png" type="Texture" id=1]
-[ext_resource path="res://BookOnShelf.gd" type="Script" id=2]
+[ext_resource path="res://objects/BookOnShelf.gd" type="Script" id=2]
 
 [node name="BookOnShelf" type="Node2D"]
 script = ExtResource( 2 )
