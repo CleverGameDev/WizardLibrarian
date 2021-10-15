@@ -1,0 +1,24 @@
+{
+  "quests": [
+    {
+      "id": "quest_ars_moriendi_easy",
+      "difficulty": "easy",
+      "description": "I am looking for a copy of \"Ars Moriendi\". It is an old Latin book from the 1400s.",
+      "allowed_book_ids": ["book_ars_moriendi"]
+    },
+    {
+      "id": "quest_household_charms_medium",
+      "difficulty": "medium",
+      "description": "My mother is visiting my dorm room and I need it to look nice. Do you have any spellbooks to help me with that?",
+      "or_tags": [
+        "cleaning"
+      ],
+      "and_tags": [
+        [
+          "illusion",
+          "objects"
+        ]
+      ]
+    }
+  ]
+}

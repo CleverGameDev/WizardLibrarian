@@ -11,6 +11,8 @@ var used_ids = {}
 # allow us to easily grab an unused book
 var unused_ids = {}
 
+var books_on_floor = {}
+
 var BookScene
 var Utilities
 
@@ -28,6 +30,7 @@ func load_json_file(path):
 	var obj = result_json.result
 	return obj
 
+# put a new book on the floor
 func instantiate_new_book_at(pos):
 	if unused_ids.size() == 0:
 		print("out of books!!!!")
@@ -41,6 +44,7 @@ func instantiate_new_book_at(pos):
 	new_book.set_sprite(Utilities.get_random_integer(1,3))
 	new_book.position.x = pos[0]
 	new_book.position.y = pos[1]
+	books_on_floor[new_id] = true
 	return new_book
 
 
@@ -54,7 +58,6 @@ func _ready():
 	id_to_book_index = {}
 	var index = 0
 	for book in all_books:
-		print(book)
 		id_to_book_index[book["id"]] = index
 		unused_ids[book["id"]] = true
 		index += 1
