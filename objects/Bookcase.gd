@@ -28,6 +28,15 @@ func _ready():
 
 	pass # Replace with function body.
 
+func grab_current_book():
+	return bookshelves[current_shelf_index].grab_current_book()
+
+func can_grab_book():
+	return bookshelves[current_shelf_index].num_books() > 0
+
+func num_books_on_current_shelf():
+	return bookshelves[current_shelf_index].num_books()
+
 # show a big bookcase zoomed in
 func zoom_in():
 	old_position = position

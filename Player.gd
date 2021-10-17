@@ -30,6 +30,12 @@ func pick_up_nearby_objects():
 				carrying_books.append(body.attributes["id"])
 				body.free()
 
+func add_book_to_inventory(book_id):
+	carrying_books.append(book_id)
+
+func pop_first_book():
+	return carrying_books.pop_front()
+
 func _input(event)->void:
 	if event.is_action_pressed("ui_accept"):
 		if GameManager.is_player_focus():

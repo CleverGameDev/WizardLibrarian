@@ -17,11 +17,6 @@ func _ready():
 	#$ZoomedShelf.set_as_toplevel(true)
 	#$ZoomedShelf.position = get_viewport_rect().size / 2
 
-# TODO
-func unshelve_book(id):
-	recently_unshelved = true
-	pass
-
 func shelve_book(id):
 	var BookManager = get_node("/root/TopLevel/GameManager/BookManager")
 	var book_attributes = BookManager.get_book_by_id(id)
@@ -30,7 +25,7 @@ func shelve_book(id):
 	new_book.assign_attributes(book_attributes)
 	$ZoomedShelf/Books.add_child(new_book)
 	redraw_zoomed_books()
-	reset_sprite()
+	zoom_in()
 
 func redraw_zoomed_books():
 	var num_books = $ZoomedShelf/Books.get_child_count()
@@ -110,6 +105,17 @@ func select():
 func unselect():
 	modulate = Color(1,1,1)
 
+func num_books():
+	return $ZoomedShelf/Books.get_child_count()
+
+func grab_current_book():
+	var book_child = $ZoomedShelf/Books.get_children()[selected_book_index]
+	var book_id = book_child.attributes["id"]
+	$ZoomedShelf/Books.remove_child(book_child)
+	recently_unshelved = true
+	redraw_zoomed_books()
+	return book_id
+
 func shift_selected_book_index(delta):
 	var num_books = $ZoomedShelf/Books.get_child_count()
 	if num_books == 0:
@@ -119,9 +125,6 @@ func shift_selected_book_index(delta):
 	selected_book_index = (selected_book_index + delta) % num_books
 	$ZoomedShelf/Books.get_children()[selected_book_index].select()
 	redraw_book_label()
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
 
 func _input(event)->void:
 	if !$ZoomedShelf.visible || $ZoomedShelf/Books.get_children().size() == 0:

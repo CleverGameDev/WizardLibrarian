@@ -26,13 +26,8 @@ func set_start_movement():
 	yield(get_tree().create_timer(1.0), "timeout")
 	set_movement(0,0)
 
-func _print_me():
-	print("hi")
 
 func set_movement(x, y):
-	print("setting movement!")
-	print(x)
-	print(y)
 	vel.x = 0
 	vel.y = 0
 

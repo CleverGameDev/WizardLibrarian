@@ -46,8 +46,37 @@ func view_bookcase(body):
 	current_bookcase = body
 
 
+# when interacting with a bookshelf, wizard can shelve or unshelve
+func do_action_on_bookshelf():
+	var has_book = $Player.carrying_books.size() > 0
+	var book_on_shelf = current_bookcase.num_books_on_current_shelf() > 0
+	# case: has book, also book on shelf. check if they mean to shelve/unshelve
+	if has_book && book_on_shelf:
+		open_shelve_or_unshelve()
+	# case: has book, no book on shelf. always shelve.
+	elif has_book && !book_on_shelf:
+		emit_shelve_book_event()
+	# case: no book, book on shelf. always unshelve.
+	elif !has_book && book_on_shelf:
+		emit_grab_book_event()
+	# case: no book, no book on shelf...no-op
+	else:
+		pass
+
+
+func emit_grab_book_event():
+	var book_id = current_bookcase.grab_current_book()
+	$Player.add_book_to_inventory(book_id)
+
+func open_shelve_or_unshelve():
+	$ShelveOrUnshelvePopupNode.show()
+
 # triggered when we shelve a book
-func emit_shelve_book_event(book_id):
+func emit_shelve_book_event():
+	var book_id = $Player.pop_first_book()
+	if !book_id:
+		print("how did we get here!!!")
+		return
 	current_bookcase.shelve_book(book_id)
 	$BookManager.shelve_book(book_id)
 	# if we have no books on floor, do a new quest
@@ -91,10 +120,8 @@ func _input(event)->void:
 			focus_on_bookshelf()
 			get_tree().set_input_as_handled()
 		elif current_focus == Focus.BOOKSHELF_FOCUS:
-			var book_id = $Player.carrying_books.pop_front()
-			if book_id:
-				emit_shelve_book_event(book_id)
-				get_tree().set_input_as_handled()
+			do_action_on_bookshelf()
+			get_tree().set_input_as_handled()
 	# selecting a shelf on the bookcase
 	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed("ui_left"):
 		current_bookcase.shift_selected_bookcase_index(-1)

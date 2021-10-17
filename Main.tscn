@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://graphics/townfolk1_m.png" type="Texture" id=1]
 [ext_resource path="res://objects/BookManager.gd" type="Script" id=2]
@@ -6,9 +6,161 @@
 [ext_resource path="res://graphics/tilesetformattedupdate1.png" type="Texture" id=4]
 [ext_resource path="res://Player.gd" type="Script" id=5]
 [ext_resource path="res://Utilities.gd" type="Script" id=6]
-[ext_resource path="res://MainYSort.gd" type="Script" id=7]
 [ext_resource path="res://text/TextTheme.tres" type="Theme" id=8]
 [ext_resource path="res://QuestManager.gd" type="Script" id=9]
+[ext_resource path="res://ShelveOrUnshelvePopupNode.gd" type="Script" id=10]
+[ext_resource path="res://addons/GameTemplate/GUI/Buttons/DefaultButton.tscn" type="PackedScene" id=11]
+
+[sub_resource type="GDScript" id=28]
+script/source = "# This class does everything
+extends YSort
+
+# determines if left/right/up/down moves the player, 
+# or currently selected shelf/book
+# inner ui focus = menu like select a book, shelve/unshelve book,
+enum Focus {PLAYER_FOCUS, BOOKCASE_FOCUS, BOOKSHELF_FOCUS, INNER_UI_FOCUS}
+var current_focus = Focus.PLAYER_FOCUS
+var previous_focus_before_menu = Focus.PLAYER_FOCUS
+
+var current_bookcase
+var current_bookshelf
+
+# when we shelve all books on the floor
+var ready_for_new_npc = false
+var npc_is_here = false
+
+func _ready():
+	instantiate_objects()
+	pass
+
+# puts books on the ground and a bookcase
+func instantiate_objects():
+	for pos in [[500,300], [480,250], [520,230]]:
+		add_child($BookManager.instantiate_new_book_at(pos))
+	var bookcase_scene = preload(\"res://objects/Bookcase.tscn\")
+	var bookcase1 = bookcase_scene.instance()
+	bookcase1.position.x = 550
+	bookcase1.position.y = 350
+	add_child(bookcase1)
+
+func add_npc():
+	ready_for_new_npc = false
+	npc_is_here = true
+	var npc_scene = preload(\"res://NPC.tscn\")
+	var npc1 = npc_scene.instance()
+	npc1.position = Vector2(430,140)
+	add_child(npc1)
+	
+
+# convenience function to see if we are in the main map.
+# used in GUI
+func is_player_focus():
+	return current_focus == Focus.PLAYER_FOCUS
+
+func view_bookcase(body):
+	current_focus = Focus.BOOKCASE_FOCUS
+	$BookcasePopupNode.visible = true
+	body.zoom_in()
+	current_bookcase = body
+
+
+# when interacting with a bookshelf, wizard can shelve or unshelve
+func do_action_on_bookshelf():
+	var has_book = $Player.carrying_books.size() > 0
+	var can_grab_book = current_bookcase.can_grab_book()
+	# case: has book, also book on shelf. check if they mean to shelve/unshelve
+	if has_book && can_grab_book:
+		open_shelve_or_unshelve()
+	# case: has book, no book on shelf. always shelve.
+	elif has_book && !can_grab_book:
+		shelve_book()
+	# case: no book, book on shelf. always unshelve.
+	elif !has_book && can_grab_book:
+		grab_book()
+	# case: no book, no book on shelf...no-op
+	else:
+		pass
+
+
+func grab_book():
+	var book_id = current_bookcase.grab_current_book()
+	$Player.add_book_to_inventory(book_id)
+
+func open_shelve_or_unshelve():
+	previous_focus_before_menu = current_focus
+	current_focus = Focus.INNER_UI_FOCUS
+	$ShelveOrUnshelvePopupNode.show()
+
+# triggered when we shelve a book
+func shelve_book():
+	var book_id = $Player.pop_first_book()
+	if !book_id:
+		print(\"how did we get here!!!\")
+		return
+	current_bookcase.shelve_book(book_id)
+	$BookManager.shelve_book(book_id)
+	# if we have no books on floor, do a new quest
+	if $Player.carrying_books.size() == 0 && $BookManager.books_on_floor.size() == 0:
+		ready_for_new_npc = !npc_is_here
+
+func focus_out_of_inner_ui():
+	current_focus = previous_focus_before_menu
+
+func focus_out_of_bookshelf():
+	$BookcasePopupNode.visible = true
+	current_bookcase.zoom_out_bookshelf()
+	current_focus = Focus.BOOKCASE_FOCUS
+
+
+func focus_out_of_bookcase():
+	$BookcasePopupNode.visible = false
+	current_bookcase.zoom_out()
+	current_focus = Focus.PLAYER_FOCUS
+	if ready_for_new_npc:
+		yield(get_tree().create_timer(1.0), \"timeout\")
+		add_npc()
+
+
+func focus_on_bookshelf():
+	current_focus = Focus.BOOKSHELF_FOCUS
+	current_bookcase.zoom_current_bookshelf()
+
+func focus_on_bookcase():
+	#TPDP
+	pass
+
+func _input(event)->void:
+	if event.is_action_pressed(\"ui_cancel\"):
+		if is_player_focus():
+			return
+		# focus back one level -- shelf to bookcase, bookcase to main world
+		if current_focus == Focus.BOOKSHELF_FOCUS:
+			focus_out_of_bookshelf()
+			get_tree().set_input_as_handled()
+		elif current_focus == Focus.BOOKCASE_FOCUS:
+			focus_out_of_bookcase()
+			get_tree().set_input_as_handled()
+	elif event.is_action_pressed(\"ui_accept\"):
+		if current_focus == Focus.BOOKCASE_FOCUS:
+			focus_on_bookshelf()
+			get_tree().set_input_as_handled()
+		elif current_focus == Focus.BOOKSHELF_FOCUS:
+			do_action_on_bookshelf()
+			get_tree().set_input_as_handled()
+	# selecting a shelf on the bookcase
+	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed(\"ui_left\"):
+		current_bookcase.shift_selected_bookcase_index(-1)
+		get_tree().set_input_as_handled()
+	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed(\"ui_right\"):
+		current_bookcase.shift_selected_bookcase_index(1)
+		get_tree().set_input_as_handled()
+	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed(\"ui_up\"):
+		current_bookcase.shift_selected_bookcase_index(-2)
+		get_tree().set_input_as_handled()
+	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed(\"ui_down\"):
+		current_bookcase.shift_selected_bookcase_index(2)
+		get_tree().set_input_as_handled()
+"
 
 [sub_resource type="OccluderPolygon2D" id=1]
 polygon = PoolVector2Array( 10, 0, 10, 0, 10, 28, 10, 28 )
@@ -278,13 +430,93 @@ extents = Vector2( 8, 4 )
 [sub_resource type="RectangleShape2D" id=22]
 extents = Vector2( 4, 2 )
 
-[sub_resource type="RectangleShape2D" id=23]
+[sub_resource type="StyleBoxFlat" id=23]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 0.0
+content_margin_bottom = 1.0
+bg_color = Color( 0.0705882, 0.305882, 0.537255, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+corner_detail = 1
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=24]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 0.0
+content_margin_bottom = 1.0
+bg_color = Color( 0.227451, 0.266667, 0.4, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+corner_detail = 1
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=25]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 0.0
+content_margin_bottom = 1.0
+bg_color = Color( 0.14902, 0.168627, 0.266667, 0 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.0705882, 0.305882, 0.537255, 1 )
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+corner_detail = 1
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=26]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 0.0
+content_margin_bottom = 1.0
+bg_color = Color( 0.14902, 0.168627, 0.266667, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0 )
+corner_detail = 1
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="RectangleShape2D" id=27]
 extents = Vector2( 15.5637, 29.3808 )
 
 [node name="TopLevel" type="Node2D"]
 
 [node name="GameManager" type="YSort" parent="."]
-script = ExtResource( 7 )
+script = SubResource( 28 )
 
 [node name="TileMap" type="TileMap" parent="GameManager"]
 scale = Vector2( 2, 2 )
@@ -380,27 +612,50 @@ __meta__ = {
 
 [node name="ShelveOrUnshelvePopupNode" type="Node2D" parent="GameManager"]
 z_index = 1
+script = ExtResource( 10 )
 
-[node name="PopupMenu" type="PopupMenu" parent="GameManager/ShelveOrUnshelvePopupNode"]
-margin_right = 85.0
-margin_bottom = 92.0
-
-[node name="Button" type="Button" parent="GameManager/ShelveOrUnshelvePopupNode/PopupMenu"]
-margin_left = 25.0374
-margin_top = 11.3638
-margin_right = 79.0374
-margin_bottom = 31.3638
-text = "Shelve"
-
-[node name="Button2" type="Button" parent="GameManager/ShelveOrUnshelvePopupNode/PopupMenu"]
-margin_left = 26.3347
-margin_top = 37.6944
-margin_right = 76.3347
-margin_bottom = 57.6944
-text = "Grab"
+[node name="Control" type="Control" parent="GameManager/ShelveOrUnshelvePopupNode"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameManager/ShelveOrUnshelvePopupNode/Control"]
+margin_left = 834.567
+margin_top = 224.781
+margin_right = 891.567
+margin_bottom = 323.781
+size_flags_vertical = 4
+custom_constants/separation = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shelve" parent="GameManager/ShelveOrUnshelvePopupNode/Control/VBoxContainer" groups=[
+"Pause",
+] instance=ExtResource( 11 )]
+margin_right = 57.0
+focus_neighbour_top = NodePath("../Unshelve")
+custom_styles/hover = SubResource( 23 )
+custom_styles/pressed = SubResource( 24 )
+custom_styles/focus = SubResource( 25 )
+custom_styles/disabled = SubResource( 26 )
+custom_styles/normal = SubResource( 26 )
+text = "Shelve"
+
+[node name="Unshelve" parent="GameManager/ShelveOrUnshelvePopupNode/Control/VBoxContainer" instance=ExtResource( 11 )]
+margin_top = 20.0
+margin_right = 57.0
+margin_bottom = 39.0
+focus_neighbour_bottom = NodePath("../Shelve")
+custom_styles/hover = SubResource( 23 )
+custom_styles/pressed = SubResource( 24 )
+custom_styles/focus = SubResource( 25 )
+custom_styles/disabled = SubResource( 26 )
+custom_styles/normal = SubResource( 26 )
+text = "Unshelve"
 
 [node name="QuestManager" type="Node" parent="GameManager"]
 script = ExtResource( 9 )
@@ -416,4 +671,4 @@ region_rect = Rect2( 91, 116, 16, 32 )
 
 [node name="DeskCollision" type="CollisionShape2D" parent="GameManager/Desk"]
 position = Vector2( 363.451, 220.472 )
-shape = SubResource( 23 )
+shape = SubResource( 27 )
