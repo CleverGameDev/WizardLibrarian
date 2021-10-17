@@ -20,13 +20,13 @@ func _ready():
 
 func open_nearby_bookcase():
 	for body in $PickupArea.get_overlapping_bodies():
-		if (body.object_type == "Bookcase"):
+		if ("object_type" in body && body.object_type == "Bookcase"):
 			GameManager.view_bookcase(body)
 			break
 
 func pick_up_nearby_objects():
 	for body in $PickupArea.get_overlapping_bodies():
-			if (body.object_type == "Book"):
+			if ("object_type" in body && body.object_type == "Book"):
 				carrying_books.append(body.attributes["id"])
 				body.free()
 
