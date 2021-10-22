@@ -7,6 +7,7 @@
       "height": "tall",
       "width": "thick",
       "description": "It is a heavy, black book titled \"Ars Moriendi\" -- Latin for \"The Art of Dying\". Written in 1415 by Dominican Monks, this tome offers advice on dying according to Christian philosophy in the Middle Ages.",
+      "author": "Unknown",
       "alignment": "neutral",
       "tags": [
         "latin",
@@ -25,6 +26,7 @@
       "height": "tall",
       "width": "thin",
       "description": "It is a thin, blue book titled \"Common Household Charms\". It contains many spells and cantrips for cleaning the house, as well as small home repairs.",
+      "author": "Unknown",
       "alignment": "neutral",
       "tags": [
         "spells",
@@ -43,12 +45,20 @@
       "height": "short",
       "width": "thin",
       "description": "It is a thin manuscript titled \"Last Will and Testament of Martigan Manwell\". Martigan 'Mad Marty' Manwell was an infamous wizard from the 1980s known for his outrageous pranks. Beside the apportionment of his belongings, the document is peppered with mischievous spells of Martigan's own devising.",
+      "author": "Martigan Manwell",
       "alignment": "neutral",
-      "tags": [
-        "spells",
-        "mischief",
-        "death"
-      ]
+      "tags": ["spells", "mischief", "death"]
+    },
+    {
+      "id": "book_magicians_helper",
+      "title": "Magician's Helper",
+      "color": "green",
+      "height": "medium",
+      "width": "wide",
+      "description": "It's a seafoam green book titled \"Magician's Helper: Finding a familiar and training it, from welp to adult\". Written in 1804 by Horace Grimfalc, who was president of the European Familiar Society for over 20 years.",
+      "author": "Horace Grimfalc",
+      "alignment": "good",
+      "tags": ["familiar", "training"]
     }
   ]
 }
