@@ -12,14 +12,14 @@
 [ext_resource path="res://ShelveOrUnshelvePopupNode.gd" type="Script" id=10]
 [ext_resource path="res://addons/GameTemplate/GUI/Buttons/DefaultButton.tscn" type="PackedScene" id=11]
 
-[sub_resource type="GDScript" id=28]
+[sub_resource type="GDScript" id=1]
 script/source = "# This class does everything
 extends YSort
 
 # determines if left/right/up/down moves the player, 
 # or currently selected shelf/book
 # inner ui focus = menu like select a book, shelve/unshelve book,
-enum Focus {PLAYER_FOCUS, BOOKCASE_FOCUS, BOOKSHELF_FOCUS, INNER_UI_FOCUS}
+enum Focus {PLAYER_FOCUS, BOOKCASE_FOCUS, BOOKSHELF_FOCUS, INNER_UI_FOCUS, DIALOG_FOCUS}
 var current_focus = Focus.PLAYER_FOCUS
 var previous_focus_before_menu = Focus.PLAYER_FOCUS
 
@@ -29,6 +29,7 @@ var current_bookshelf
 # when we shelve all books on the floor
 var ready_for_new_npc = false
 var npc_is_here = false
+var current_npc
 
 func _ready():
 	instantiate_objects()
@@ -48,11 +49,10 @@ func add_npc():
 	ready_for_new_npc = false
 	npc_is_here = true
 	var npc_scene = preload(\"res://NPC.tscn\")
-	var npc1 = npc_scene.instance()
-	npc1.position = Vector2(430,140)
-	add_child(npc1)
+	current_npc = npc_scene.instance()
+	current_npc.position = Vector2(430,150)
+	add_child(current_npc)
 	
-
 # convenience function to see if we are in the main map.
 # used in GUI
 func is_player_focus():
@@ -121,6 +121,13 @@ func focus_out_of_bookcase():
 		yield(get_tree().create_timer(1.0), \"timeout\")
 		add_npc()
 
+func focus_on_dialog():
+	current_focus = Focus.DIALOG_FOCUS
+
+func focus_out_of_dialog():
+	current_focus = Focus.PLAYER_FOCUS
+	current_npc.hide_dialog()
+	
 
 func focus_on_bookshelf():
 	current_focus = Focus.BOOKSHELF_FOCUS
@@ -140,6 +147,9 @@ func _input(event)->void:
 			get_tree().set_input_as_handled()
 		elif current_focus == Focus.BOOKCASE_FOCUS:
 			focus_out_of_bookcase()
+			get_tree().set_input_as_handled()
+		elif current_focus == Focus.DIALOG_FOCUS:
+			focus_out_of_dialog()
 			get_tree().set_input_as_handled()
 	elif event.is_action_pressed(\"ui_accept\"):
 		if current_focus == Focus.BOOKCASE_FOCUS:
@@ -163,10 +173,10 @@ func _input(event)->void:
 		get_tree().set_input_as_handled()
 "
 
-[sub_resource type="OccluderPolygon2D" id=1]
+[sub_resource type="OccluderPolygon2D" id=2]
 polygon = PoolVector2Array( 10, 0, 10, 0, 10, 28, 10, 28 )
 
-[sub_resource type="TileSet" id=2]
+[sub_resource type="TileSet" id=3]
 0/name = "rpg indoor tileset expansion 1 trans.png 0"
 0/texture = ExtResource( 3 )
 0/tex_offset = Vector2( 0, 0 )
@@ -216,7 +226,7 @@ polygon = PoolVector2Array( 10, 0, 10, 0, 10, 28, 10, 28 )
 3/region = Rect2( 54, 100, 20, 29 )
 3/tile_mode = 0
 3/occluder_offset = Vector2( 0, 0 )
-3/occluder = SubResource( 1 )
+3/occluder = SubResource( 2 )
 3/navigation_offset = Vector2( 0, 0 )
 3/shape_offset = Vector2( 0, 0 )
 3/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
@@ -337,129 +347,129 @@ polygon = PoolVector2Array( 10, 0, 10, 0, 10, 28, 10, 28 )
 11/shapes = [  ]
 11/z_index = 0
 
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
-
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 36, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=5]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 36, 32, 36 )
+region = Rect2( 0, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=6]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 36, 32, 36 )
+region = Rect2( 32, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 108, 32, 36 )
+region = Rect2( 64, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=8]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 72, 32, 36 )
+region = Rect2( 32, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 0, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=10]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 72, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=11]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 108, 32, 36 )
+region = Rect2( 64, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=12]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 108, 32, 36 )
+region = Rect2( 0, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=13]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 108, 32, 36 )
+region = Rect2( 32, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=14]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 64, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=15]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 36, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=16]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 32, 36 )
+region = Rect2( 32, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=17]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 0, 32, 36 )
+region = Rect2( 0, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=18]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 0, 32, 36 )
+region = Rect2( 32, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 1 )
+region = Rect2( 64, 0, 32, 36 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 1 )
 region = Rect2( 32, 0, 32, 36 )
 
-[sub_resource type="SpriteFrames" id=20]
+[sub_resource type="SpriteFrames" id=21]
 animations = [ {
-"frames": [ SubResource( 3 ) ],
+"frames": [ SubResource( 4 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 5 ), SubResource( 6 ), SubResource( 7 ) ],
 "loop": true,
 "name": "east",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ) ],
+"frames": [ SubResource( 8 ) ],
 "loop": true,
 "name": "idle_west",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ) ],
 "loop": true,
 "name": "south",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ) ],
+"frames": [ SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ],
 "loop": true,
 "name": "west",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 14 ) ],
+"frames": [ SubResource( 15 ) ],
 "loop": true,
 "name": "idle_south",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 15 ) ],
+"frames": [ SubResource( 16 ) ],
 "loop": true,
 "name": "idle_east",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
+"frames": [ SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
 "name": "north",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 19 ) ],
+"frames": [ SubResource( 20 ) ],
 "loop": true,
 "name": "idle_north",
 "speed": 5.0
 } ]
 
-[sub_resource type="RectangleShape2D" id=21]
+[sub_resource type="RectangleShape2D" id=22]
 extents = Vector2( 8, 4 )
 
-[sub_resource type="RectangleShape2D" id=22]
+[sub_resource type="RectangleShape2D" id=23]
 extents = Vector2( 4, 2 )
 
-[sub_resource type="StyleBoxFlat" id=23]
+[sub_resource type="StyleBoxFlat" id=24]
 content_margin_left = 2.0
 content_margin_right = 2.0
 content_margin_top = 0.0
@@ -480,7 +490,7 @@ expand_margin_right = 2.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=24]
+[sub_resource type="StyleBoxFlat" id=25]
 content_margin_left = 2.0
 content_margin_right = 2.0
 content_margin_top = 0.0
@@ -501,7 +511,7 @@ expand_margin_right = 2.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=25]
+[sub_resource type="StyleBoxFlat" id=26]
 content_margin_left = 2.0
 content_margin_right = 2.0
 content_margin_top = 0.0
@@ -522,7 +532,7 @@ expand_margin_right = 2.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=26]
+[sub_resource type="StyleBoxFlat" id=27]
 content_margin_left = 2.0
 content_margin_right = 2.0
 content_margin_top = 0.0
@@ -539,17 +549,17 @@ expand_margin_right = 2.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="RectangleShape2D" id=27]
+[sub_resource type="RectangleShape2D" id=28]
 extents = Vector2( 15.5637, 29.3808 )
 
 [node name="TopLevel" type="Node2D"]
 
 [node name="GameManager" type="YSort" parent="."]
-script = SubResource( 28 )
+script = SubResource( 1 )
 
 [node name="TileMap" type="TileMap" parent="GameManager"]
 scale = Vector2( 2, 2 )
-tile_set = SubResource( 2 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
@@ -564,19 +574,19 @@ script = ExtResource( 5 )
 [node name="PlayerSprite" type="AnimatedSprite" parent="GameManager/Player"]
 position = Vector2( 0, -6 )
 scale = Vector2( 0.5, 0.5 )
-frames = SubResource( 20 )
+frames = SubResource( 21 )
 animation = "idle_north"
 
 [node name="PlayerCollision" type="CollisionShape2D" parent="GameManager/Player"]
 position = Vector2( 0.5, 0 )
 scale = Vector2( 0.5, 0.5 )
-shape = SubResource( 21 )
+shape = SubResource( 22 )
 
 [node name="PickupArea" type="Area2D" parent="GameManager/Player"]
 
 [node name="PickupAreaCollisionArea" type="CollisionShape2D" parent="GameManager/Player/PickupArea"]
 position = Vector2( 0.5, 0 )
-shape = SubResource( 22 )
+shape = SubResource( 23 )
 
 [node name="BookManager" type="Node" parent="GameManager"]
 script = ExtResource( 2 )
@@ -667,11 +677,11 @@ __meta__ = {
 ] instance=ExtResource( 11 )]
 margin_right = 57.0
 focus_neighbour_top = NodePath("../Unshelve")
-custom_styles/hover = SubResource( 23 )
-custom_styles/pressed = SubResource( 24 )
-custom_styles/focus = SubResource( 25 )
-custom_styles/disabled = SubResource( 26 )
-custom_styles/normal = SubResource( 26 )
+custom_styles/hover = SubResource( 24 )
+custom_styles/pressed = SubResource( 25 )
+custom_styles/focus = SubResource( 26 )
+custom_styles/disabled = SubResource( 27 )
+custom_styles/normal = SubResource( 27 )
 text = "Shelve"
 
 [node name="Unshelve" parent="GameManager/ShelveOrUnshelvePopupNode/Control/VBoxContainer" instance=ExtResource( 11 )]
@@ -679,11 +689,11 @@ margin_top = 20.0
 margin_right = 57.0
 margin_bottom = 39.0
 focus_neighbour_bottom = NodePath("../Shelve")
-custom_styles/hover = SubResource( 23 )
-custom_styles/pressed = SubResource( 24 )
-custom_styles/focus = SubResource( 25 )
-custom_styles/disabled = SubResource( 26 )
-custom_styles/normal = SubResource( 26 )
+custom_styles/hover = SubResource( 24 )
+custom_styles/pressed = SubResource( 25 )
+custom_styles/focus = SubResource( 26 )
+custom_styles/disabled = SubResource( 27 )
+custom_styles/normal = SubResource( 27 )
 text = "Unshelve"
 
 [node name="QuestManager" type="Node" parent="GameManager"]
@@ -700,4 +710,4 @@ region_rect = Rect2( 91, 116, 16, 32 )
 
 [node name="DeskCollision" type="CollisionShape2D" parent="GameManager/Desk"]
 position = Vector2( 363.451, 220.472 )
-shape = SubResource( 27 )
+shape = SubResource( 28 )

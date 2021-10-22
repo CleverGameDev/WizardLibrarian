@@ -5,19 +5,43 @@ var vel = Vector2()
 var facingDir = Vector2()
 # onready var rayCast = $RayCast2D
 
+enum State {INITIAL, HAS_GIVEN_QUEST}
+var current_state = State.INITIAL
+
 onready var anim = $NPCSprite
 
 # TODO: move this to its own object/script?
 var carrying_books = []
 
+var quest
+
+var QuestManager
 var GameManager
 
 var object_type = "NPC"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	GameManager = get_parent()
+	$NPCDialogPopupNode.set_as_toplevel(true)
+	GameManager = get_node("/root/TopLevel/GameManager")
+	QuestManager = get_node("/root/TopLevel/GameManager/QuestManager")
+	quest = QuestManager.start_new_quest()
+	print(quest)
 	set_start_movement()
+
+
+func show_dialog(text):
+	GameManager.focus_on_dialog()
+	$NPCDialogPopupNode.visible = true
+	$NPCDialogPopupNode/DialogText.text = text
+
+func hide_dialog():
+	$NPCDialogPopupNode.visible = false
+
+func talk():
+	# show next dialog
+	if current_state == State.INITIAL:
+		show_dialog(quest["description"])
 
 func set_start_movement():
 	set_movement(0,1)

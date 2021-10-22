@@ -1,7 +1,8 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://graphics/characters/townfolk1_f.png" type="Texture" id=1]
 [ext_resource path="res://NPC.gd" type="Script" id=2]
+[ext_resource path="res://text/TextTheme.tres" type="Theme" id=3]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
@@ -126,9 +127,43 @@ extents = Vector2( 8.9804, 3.94948 )
 script = ExtResource( 2 )
 
 [node name="NPCSprite" type="AnimatedSprite" parent="."]
+position = Vector2( -3.16936, -14.211 )
 frames = SubResource( 18 )
 animation = "idle_west"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( 3.04037, 14.2506 )
+position = Vector2( -0.128986, 0.0396347 )
 shape = SubResource( 19 )
+
+[node name="NPCDialogPopupNode" type="Node2D" parent="."]
+visible = false
+z_index = 1
+
+[node name="PopupBackground" type="ColorRect" parent="NPCDialogPopupNode"]
+margin_left = 399.0
+margin_top = 433.0
+margin_right = 711.0
+margin_bottom = 591.0
+color = Color( 0.207843, 0.207843, 0.207843, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DialogText" type="Label" parent="NPCDialogPopupNode"]
+margin_left = 408.0
+margin_top = 442.0
+margin_right = 556.0
+margin_bottom = 512.0
+rect_scale = Vector2( 2, 2 )
+theme = ExtResource( 3 )
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="NPCDialogPopupNode"]
+position = Vector2( 872.248, 479.945 )
+scale = Vector2( 8, 8 )
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 5.3165, 109.432, 23.7037, 28.4444 )

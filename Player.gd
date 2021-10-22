@@ -18,17 +18,20 @@ var object_type = "Player"
 func _ready():
 	GameManager = get_parent()
 
-func open_nearby_bookcase():
+func interact_with_nearby_objects():
 	for body in $PickupArea.get_overlapping_bodies():
 		if ("object_type" in body && body.object_type == "Bookcase"):
 			GameManager.view_bookcase(body)
-			break
+			return
+		elif ("object_type" in body && body.object_type == "Book"):
+			carrying_books.append(body.attributes["id"])
+			body.free()
+			return
+		elif ("object_type" in body && body.object_type == "NPC"):
+			body.talk()
+			return
 
-func pick_up_nearby_objects():
-	for body in $PickupArea.get_overlapping_bodies():
-			if ("object_type" in body && body.object_type == "Book"):
-				carrying_books.append(body.attributes["id"])
-				body.free()
+	
 
 func add_book_to_inventory(book_id):
 	carrying_books.append(book_id)
@@ -39,8 +42,7 @@ func pop_first_book():
 func _input(event)->void:
 	if event.is_action_pressed("ui_accept"):
 		if GameManager.is_player_focus():
-			pick_up_nearby_objects()
-			open_nearby_bookcase()
+			interact_with_nearby_objects()
 			get_tree().set_input_as_handled()
 
 func _physics_process (delta):
