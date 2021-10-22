@@ -557,6 +557,34 @@ extents = Vector2( 15.5637, 29.3808 )
 [node name="GameManager" type="YSort" parent="."]
 script = SubResource( 1 )
 
+[node name="InventoryNode" type="Node2D" parent="GameManager"]
+position = Vector2( 8, 64 )
+scale = Vector2( 2, 2 )
+z_index = 1
+
+[node name="PopupBackground" type="ColorRect" parent="GameManager/InventoryNode"]
+margin_right = 132.0
+margin_bottom = 224.0
+color = Color( 0.207843, 0.207843, 0.207843, 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="InventoryText" type="Label" parent="GameManager/InventoryNode"]
+anchor_left = 1.36364
+anchor_top = 0.142857
+anchor_right = 1.36364
+anchor_bottom = 0.142857
+margin_right = 120.0
+margin_bottom = 204.0
+theme = ExtResource( 8 )
+text = "Inventory
+"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
 [node name="TileMap" type="TileMap" parent="GameManager"]
 scale = Vector2( 2, 2 )
 tile_set = SubResource( 3 )
@@ -609,6 +637,7 @@ __meta__ = {
 }
 
 [node name="ShelfDescription" type="Label" parent="GameManager/BookcasePopupNode/PopupBackground"]
+visible = false
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -625,6 +654,7 @@ __meta__ = {
 }
 
 [node name="BookDescription" type="Label" parent="GameManager/BookcasePopupNode/PopupBackground"]
+visible = false
 margin_left = 794.0
 margin_top = 282.0
 margin_right = 1010.0
@@ -636,6 +666,7 @@ __meta__ = {
 }
 
 [node name="Hints" type="Label" parent="GameManager/BookcasePopupNode/PopupBackground"]
+visible = false
 margin_left = 92.6091
 margin_top = 57.0519
 margin_right = 308.609

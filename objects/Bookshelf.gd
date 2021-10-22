@@ -24,20 +24,24 @@ func shelve_book(id):
 	var new_book = book_scene.instance()
 	new_book.assign_attributes(book_attributes)
 	$ZoomedShelf/Books.add_child(new_book)
-	redraw_zoomed_books()
 	zoom_in()
 
-func redraw_zoomed_books():
+func redraw_zoomed_books(move_positions):
 	var num_books = $ZoomedShelf/Books.get_child_count()
 
 	var i = -num_books/2
+	var index = 0
+	print("going through books")
 	for book in $ZoomedShelf/Books.get_children():
-		
+		if index == selected_book_index:
+			book.select()
+		else:
+			book.unselect()
 		var size = (book.get_children()[0].region_rect.size)
-		print(size)
 		book.position = Vector2(i*8*size.x, -8*(size.y/2))
 		i += 1
-	pass
+		index += 1
+	redraw_book_label()
 
 func reset_sprite():
 	var num_books = $ZoomedShelf/Books.get_child_count()
@@ -60,9 +64,6 @@ func reset_sprite():
 func zoom_in():
 	var num_books = $ZoomedShelf/Books.get_child_count()
 	selected_book_index = floor(num_books/2)
-	redraw_book_label()
-	if selected_book_index < num_books:
-		$ZoomedShelf/Books.get_children()[selected_book_index].select()
 	recently_unshelved = false
 	for sprite in sprites:
 		sprite.visible = false
@@ -78,22 +79,18 @@ func zoom_in():
 		$ZoomedShelf/ZoomedShelfWoodSome.visible = true
 	else:
 		$ZoomedShelf/ZoomedShelfWoodFew.visible = true
+	redraw_zoomed_books(true)
 	
 func redraw_book_label():
-	print("putting desc")
-	print($ZoomedShelf/CurrentBookLabel.visible)
-	print($ZoomedShelf/CurrentBookLabel.rect_position.x)
 	if selected_book_index < $ZoomedShelf/Books.get_child_count():
 		var description = $ZoomedShelf/Books.get_children()[selected_book_index].attributes["description"]
-		print(description)
 		$ZoomedShelf/CurrentBookLabel.text = description
 	else:
-		print("blank")
 		$ZoomedShelf/CurrentBookLabel.text = ""
 
 func zoom_out():
 	if recently_unshelved:
-		redraw_zoomed_books()
+		redraw_zoomed_books(true)
 	recently_unshelved = false
 	reset_sprite()
 	$ZoomedShelf.visible = false
@@ -112,8 +109,10 @@ func grab_current_book():
 	var book_child = $ZoomedShelf/Books.get_children()[selected_book_index]
 	var book_id = book_child.attributes["id"]
 	$ZoomedShelf/Books.remove_child(book_child)
+	if selected_book_index >= $ZoomedShelf/Books.get_child_count():
+		shift_selected_book_index(-1)
 	recently_unshelved = true
-	redraw_zoomed_books()
+	redraw_zoomed_books(false)
 	return book_id
 
 func shift_selected_book_index(delta):
@@ -121,10 +120,8 @@ func shift_selected_book_index(delta):
 	if num_books == 0:
 		return
 	selected_book_index = int(selected_book_index) % num_books
-	$ZoomedShelf/Books.get_children()[selected_book_index].unselect()
 	selected_book_index = (selected_book_index + delta) % num_books
-	$ZoomedShelf/Books.get_children()[selected_book_index].select()
-	redraw_book_label()
+	redraw_zoomed_books(false)
 
 func _input(event)->void:
 	if !$ZoomedShelf.visible || $ZoomedShelf/Books.get_children().size() == 0:
