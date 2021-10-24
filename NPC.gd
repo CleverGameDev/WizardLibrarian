@@ -32,11 +32,11 @@ func _ready():
 
 func show_dialog(text):
 	GameManager.focus_on_dialog()
-	$NPCDialogPopupNode.visible = true
+	$NPCDialogPopupNode.show()
 	$NPCDialogPopupNode/DialogText.text = text
 
 func hide_dialog():
-	$NPCDialogPopupNode.visible = false
+	$NPCDialogPopupNode.hide()
 
 func talk():
 	# show next dialog
