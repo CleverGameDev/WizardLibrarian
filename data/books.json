@@ -59,6 +59,173 @@
       "author": "Horace Grimfalc",
       "alignment": "good",
       "tags": ["familiar", "training"]
+    },
+    {
+      "id": "book_scaly_creatures",
+      "title": "Scaly Creatures of the World",
+      "color": "yellow",
+      "height": "towering",
+      "width": "thin",
+    "description": "Comprehensive guide to creatures with scales. Includes dragons,   basilisks, hydras, and more.",
+      "author": "Muc Pomvari",
+      "alignment": "neutral",
+      "tags": ["creature", "dragon", "basilisk", "hydra"]
+    },
+    {
+      "id": "book_man_or_beast",
+      "title": "Man or Beast?",
+      "color": "lime",
+      "height": "tall",
+      "width": "medium",
+    "description": "Learn telltale signs of common human-like creatures. Never be confused  about the difference between a werewolf and a minotaur again!",
+      "author": "Trag Mastata",
+      "alignment": "neutral",
+      "tags": ["creature", "werewolf", "minotaur", "mermaid", "nymph"]
+    },
+    {
+      "id": "book_summoner_golem",
+      "title": "A Summoner's Guide to Golems",
+      "color": "bronze",
+      "height": "tall",
+      "width": "thick",
+    "description": "Golems can be a summoner's best friend and also fight with ferocious strength. The master Mur Somdawu has shared his secrets on how to make the ultimate  companion",
+      "author": "Mur Somdawu",
+      "alignment": "neutral",
+      "tags": ["creature", "spell", "golem"]
+    },
+    {
+      "id": "book_goblin_hunting",
+      "title": "Goblin Hunting",
+      "color": "olive",
+      "height": "tall",
+      "width": "medium",
+    "description": "Whether you're venturing into goblin territory or if goblins have raided your homes, you'll want this book. Learn how to track and identify the weaknesses of   goblins to give you an upper edge in combat",
+      "author": "Vos Virkawo",
+      "alignment": "neutral",
+      "tags": ["creature", "goblin", "survival"]
+    },
+    {
+      "id": "book_gnome_free_home",
+      "title": "Gnome-Free Home",
+      "color": "crimson",
+      "height": "medium",
+      "width": "medium",
+    "description": "No frills way to rid your home of gnomes. While some may consider them a sign of good fortune, they will burrow into the ground and walls of your home! Get rid   of them before they get rid of you",
+      "author": "Hol Dreccero",
+      "alignment": "neutral",
+      "tags": ["creature", "gnome", "home"]
+    },
+    
+    {
+      "id": "book_arcane_and_shadow_arts",
+      "title": "Arcane and Shadow Arts",
+      "color": "indigo",
+      "height": "towering",
+      "width": "thin",
+      "description": "No legible text is shared on this book, but it has an ominous glow",
+      "author": "Memmen Komlero",
+      "alignment": "evil",
+      "tags": ["spell", "arcane", "chaos", "shadow"]
+    },
+    {
+      "id": "book_intro_restorative_magic",
+      "title": "An Intro to Restorative Magic",
+      "color": "grass",
+      "height": "medium",
+      "width": "thin",
+    "description": "Be a bearer of life. An Intro to Restorative Magic provides step-by-step  instructions on how to cure over twenty different ailments",
+      "author": "Tribruch Ovala",
+      "alignment": "good",
+      "tags": ["spell", "healing", "beginner"]
+    },
+    {
+      "id": "book_unlocking_gaeas_power_vol1",
+      "title": "Unlocking Gaea's Power: Volume I",
+      "color": "green",
+      "height": "medium",
+      "width": "thin",
+    "description": "Mother Earth has the power to move mountains and bring life into the  world. Take the first step with Ydrech Vovloto in learning how to harness that power.",
+      "author": "Ydrech Vovloto",
+      "alignment": "neutral",
+      "tags": ["spell", "earth", "beginner"]
+    },
+    {
+      "id": "book_unlocking_gaeas_power_vol2",
+      "title": "Unlocking Gaea's Power: Volume II",
+      "color": "sage",
+      "height": "medium",
+      "width": "wide",
+    "description": "Mother Earth has the power to move mountains and bring life into the world. The second volume of this series continues with explorations into oil, metals,  and sand",
+      "author": "Ydrech Vovloto",
+      "alignment": "neutral",
+      "tags": ["spell", "earth", "intermediate"]
+    },
+    {
+      "id": "book_freeze",
+      "title": "Freeze! and other chilling spells",
+      "color": "sky",
+      "height": "short",
+      "width": "narrow",
+    "description": "Did it just start snowing? Why yes, yes it did. From rain, to snow, to  freezing lakes over, this book covers it all",
+      "author": "Daurunvol Troloma",
+      "alignment": "neutral",
+      "tags": ["spell", "ice", "reference"]
+    },
+    
+    {
+      "id": "book_want_doesnt_work",
+      "title": "What to Do When Your Wand Doesn't Work",
+      "color": "sand",
+      "height": "towering",
+      "width": "medium",
+    "description": "Never be caught off-guard again. Whether you've been disarmed, lost your wand, or your wand simply doesn't work any more, these 6 simple steps will get you back  in battle in no time.",
+      "author": "Gei Halogu",
+      "alignment": "neutral",
+      "tags": ["equipment", "field_readiness", "wand"]
+    },
+    {
+      "id": "book_to_battle",
+      "title": "To Battle!",
+      "color": "blue",
+      "height": "medium",
+      "width": "thick",
+      "description": "A guide to picking the right tools before combat",
+      "author": "Wai Meridi",
+      "alignment": "neutral",
+      "tags": ["equipment"]
+    },
+    {
+      "id": "book_enchantments_for_superior_gear",
+      "title": "1001 Enchantments for Superior Gear",
+      "color": "magenta",
+      "height": "tiny",
+      "width": "wide",
+    "description": "A comprehensive guide to all useful enchantments from invisibility to   water-breathing to lava-walking and more",
+      "author": "Hai Erana",
+      "alignment": "neutral",
+      "tags": ["equipment", "spell", "maintenance"]
+    },
+    {
+      "id": "book_dress_sense_for_every_wizard",
+      "title": "Dress Sense for Every Wizard",
+      "color": "violet",
+      "height": "medium",
+      "width": "medium",
+    "description": "Reze Gavrola reveals the secrets of style in this timeless classic. From accessories to robes and more, Gavrola's expertise will make sure every wizard knows the   fundamentals of good taste.",
+      "author": "Reze Gavrola",
+      "alignment": "neutral",
+      "tags": ["equipment", "fashion"]
+    },
+    {
+      "id": "book_i_can_buy_that",
+      "title": "I Can Buy That!",
+      "color": "yellow",
+      "height": "short",
+      "width": "medium",
+      "description": "A poor man's guide to buying clothes on a budget",
+      "author": "Vewo Onoha",
+      "alignment": "neutral",
+      "tags": ["equipment", "budget"]
     }
   ]
 }
