@@ -3,7 +3,7 @@ extends Node2D
 var GameManager
 
 onready var offer_book_button: = find_node("OfferBook")
-onready var exit_button: = find_node("Exit")
+onready var exit_button: = find_node("Bye")
 
 func _ready():
 	offer_book_button.connect("pressed", self, "_on_offer_book_pressed")
