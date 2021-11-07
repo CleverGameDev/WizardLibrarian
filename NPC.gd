@@ -5,7 +5,7 @@ var vel = Vector2()
 var facingDir = Vector2()
 # onready var rayCast = $RayCast2D
 
-enum State {INITIAL, HAS_GIVEN_QUEST}
+enum State {INITIAL, HAS_GIVEN_QUEST, HAS_OFFERED_BOOK}
 var current_state = State.INITIAL
 
 onready var anim = $NPCSprite
@@ -29,7 +29,6 @@ func _ready():
 	print(quest)
 	set_start_movement()
 
-
 func show_dialog(text):
 	GameManager.focus_on_dialog()
 	$NPCDialogPopupNode.show()
@@ -38,9 +37,19 @@ func show_dialog(text):
 func hide_dialog():
 	$NPCDialogPopupNode.hide()
 
+func offer_book_id(book_id):
+	# TODO: more quest options, responses.
+	# partial completion of quest?
+	if quest.allowed_book_ids && quest.allowed_book_ids.find(book_id) != -1:
+		show_dialog("Ah, just what I wanted!")
+	else:
+		show_dialog("Well...not quite what I wanted.")
+
 func talk():
 	# show next dialog
 	if current_state == State.INITIAL:
+		show_dialog(quest["description"])
+	elif current_state == State.HAS_GIVEN_QUEST:
 		show_dialog(quest["description"])
 
 func set_start_movement():

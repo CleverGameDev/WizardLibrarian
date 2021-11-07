@@ -12,7 +12,7 @@ var carrying_books = []
 
 var GameManager
 var BookManager
-var InventoryTextNode
+var InventoryManager
 
 var object_type = "Player"
 
@@ -20,7 +20,7 @@ var object_type = "Player"
 func _ready():
 	GameManager = get_parent()
 	BookManager = get_parent().get_node("BookManager")
-	InventoryTextNode = get_parent().get_node("InventoryNode").get_node("InventoryText")
+	InventoryManager = get_parent().get_node("InventoryManager")
 
 func interact_with_nearby_objects():
 	for body in $PickupArea.get_overlapping_bodies():
@@ -28,27 +28,12 @@ func interact_with_nearby_objects():
 			GameManager.view_bookcase(body)
 			return
 		elif ("object_type" in body && body.object_type == "Book"):
-			add_book_to_inventory(body.attributes["id"])
+			InventoryManager.add_book_to_inventory(body.attributes["id"])
 			body.free()
 			return
 		elif ("object_type" in body && body.object_type == "NPC"):
 			body.talk()
 			return
-
-func redraw_inventory():
-	var text = "Inventory\n"
-	for book_id in carrying_books:
-		text += "- " + BookManager.get_book_by_id(book_id)["title"] + "\n"
-	InventoryTextNode.text = text
-
-func add_book_to_inventory(book_id):
-	carrying_books.append(book_id)
-	redraw_inventory()
-
-func pop_first_book():
-	var first_book = carrying_books.pop_front()
-	redraw_inventory()
-	return first_book
 
 func _input(event)->void:
 	if event.is_action_pressed("ui_accept"):

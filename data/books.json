@@ -29,12 +29,12 @@
       "author": "Unknown",
       "alignment": "neutral",
       "tags": [
-        "spells",
+        "spell",
         "charms",
         "cantrips",
-        "house",
+        "home",
         "cleaning",
-        "common Magic",
+        "common magic",
         "repair"
       ]
     },
@@ -47,7 +47,7 @@
       "description": "It is a thin manuscript titled \"Last Will and Testament of Martigan Manwell\". Martigan 'Mad Marty' Manwell was an infamous wizard from the 1980s known for his outrageous pranks. Beside the apportionment of his belongings, the document is peppered with mischievous spells of Martigan's own devising.",
       "author": "Martigan Manwell",
       "alignment": "neutral",
-      "tags": ["spells", "mischief", "death"]
+      "tags": ["spell", "mischief", "death"]
     },
     {
       "id": "book_magicians_helper",
@@ -58,7 +58,7 @@
       "description": "It's a seafoam green book titled \"Magician's Helper: Finding a familiar and training it, from whelp to adult\". Written in 1804 by Horace Grimfalc, who was president of the European Familiar Society for over 20 years.",
       "author": "Horace Grimfalc",
       "alignment": "good",
-      "tags": ["familiar", "training"]
+      "tags": ["familiar", "training", "creature"]
     },
     {
       "id": "book_scaly_creatures",
@@ -66,7 +66,7 @@
       "color": "yellow",
       "height": "towering",
       "width": "thin",
-    "description": "Comprehensive guide to creatures with scales. Includes dragons,   basilisks, hydras, and more.",
+    "description": "It is an embossed book titled \"Scaly Creatures of the World\", with decorative brass scales up and down the spine. It contains a comprehensive guide to creatures with scales, including dragons, basilisks, hydras, and more.",
       "author": "Muc Pomvari",
       "alignment": "neutral",
       "tags": ["creature", "dragon", "basilisk", "hydra"]
@@ -75,9 +75,9 @@
       "id": "book_man_or_beast",
       "title": "Man or Beast?",
       "color": "lime",
-      "height": "tall",
-      "width": "medium",
-    "description": "Learn telltale signs of common human-like creatures. Never be confused  about the difference between a werewolf and a minotaur again!",
+      "height": "small",
+      "width": "thin",
+    "description": "It is a small pamphlet entited \"Man or Beast?\". Learn telltale signs of common human-like creatures. Never be confused  about the difference between a werewolf and a minotaur again!",
       "author": "Trag Mastata",
       "alignment": "neutral",
       "tags": ["creature", "werewolf", "minotaur", "mermaid", "nymph"]
@@ -88,10 +88,10 @@
       "color": "bronze",
       "height": "tall",
       "width": "thick",
-    "description": "Golems can be a summoner's best friend and also fight with ferocious strength. The master Mur Somdawu has shared his secrets on how to make the ultimate  companion",
+    "description": "It is a heavy, large book titled \"A Summoner's Guide to Golems\". Golems can be a summoner's best friend and also fight with ferocious strength. The master Mur Somdawu has shared his secrets on how to make the ultimate companion",
       "author": "Mur Somdawu",
       "alignment": "neutral",
-      "tags": ["creature", "spell", "golem"]
+      "tags": ["creature", "spell", "golem", "summoning"]
     },
     {
       "id": "book_goblin_hunting",
@@ -99,10 +99,10 @@
       "color": "olive",
       "height": "tall",
       "width": "medium",
-    "description": "Whether you're venturing into goblin territory or if goblins have raided your homes, you'll want this book. Learn how to track and identify the weaknesses of   goblins to give you an upper edge in combat",
+    "description": "It is a green book titled \"Goblin Hunting\" filled with sketches of goblins and lairs. Whether you're venturing into goblin territory or if goblins have raided your homes, you'll want this book. Learn how to track and identify the weaknesses of goblins to give you an upper edge in combat",
       "author": "Vos Virkawo",
       "alignment": "neutral",
-      "tags": ["creature", "goblin", "survival"]
+      "tags": ["creature", "goblin", "survival", "combat"]
     },
     {
       "id": "book_gnome_free_home",
@@ -110,7 +110,7 @@
       "color": "crimson",
       "height": "medium",
       "width": "medium",
-    "description": "No frills way to rid your home of gnomes. While some may consider them a sign of good fortune, they will burrow into the ground and walls of your home! Get rid   of them before they get rid of you",
+    "description": "It is emblazoned with a cursive title \"Gnome-Free Home\". No frills way to rid your home of gnomes. While some may consider them a sign of good fortune, they will burrow into the ground and walls of your home! Get rid of them before they get rid of you",
       "author": "Hol Dreccero",
       "alignment": "neutral",
       "tags": ["creature", "gnome", "home"]
@@ -133,7 +133,7 @@
       "color": "grass",
       "height": "medium",
       "width": "thin",
-    "description": "Be a bearer of life. An Intro to Restorative Magic provides step-by-step  instructions on how to cure over twenty different ailments",
+    "description": "It is a plain book titled \"An Intro to Restorative Magic\". Be a bearer of life. this book provides step-by-step instructions on how to cure over twenty different ailments",
       "author": "Tribruch Ovala",
       "alignment": "good",
       "tags": ["spell", "healing", "beginner"]
@@ -144,7 +144,7 @@
       "color": "green",
       "height": "medium",
       "width": "thin",
-    "description": "Mother Earth has the power to move mountains and bring life into the  world. Take the first step with Ydrech Vovloto in learning how to harness that power.",
+    "description": "It is a book titled \"Unlocking Gaea's Power: Volume I\". Mother Earth has the power to move mountains and bring life into the  world. Take the first step with Ydrech Vovloto in learning how to harness that power.",
       "author": "Ydrech Vovloto",
       "alignment": "neutral",
       "tags": ["spell", "earth", "beginner"]
@@ -155,21 +155,21 @@
       "color": "sage",
       "height": "medium",
       "width": "wide",
-    "description": "Mother Earth has the power to move mountains and bring life into the world. The second volume of this series continues with explorations into oil, metals,  and sand",
+    "description": "It is a book titled \"Unlocking Gaea's Power: Volume II\". Mother Earth has the power to move mountains and bring life into the world. The second volume of this series continues with explorations into oil, metals, and sand",
       "author": "Ydrech Vovloto",
       "alignment": "neutral",
       "tags": ["spell", "earth", "intermediate"]
     },
     {
       "id": "book_freeze",
-      "title": "Freeze! and other chilling spells",
+      "title": "Freeze! and ther chilling spells",
       "color": "sky",
       "height": "short",
       "width": "narrow",
-    "description": "Did it just start snowing? Why yes, yes it did. From rain, to snow, to  freezing lakes over, this book covers it all",
+    "description": "It is a sky-blue book titled \"Freeze! and ther chilling spells\". Did it just start snowing? Why yes, yes it did. From rain, to snow, to  freezing lakes over, this book covers it all.",
       "author": "Daurunvol Troloma",
       "alignment": "neutral",
-      "tags": ["spell", "ice", "reference"]
+      "tags": ["spell", "ice", "combat", "reference"]
     },
     
     {
@@ -178,10 +178,10 @@
       "color": "sand",
       "height": "towering",
       "width": "medium",
-    "description": "Never be caught off-guard again. Whether you've been disarmed, lost your wand, or your wand simply doesn't work any more, these 6 simple steps will get you back  in battle in no time.",
+    "description": "It is a book titled \"What do do When Your Wand Doesn't Work\".  Never be caught off-guard again. Whether you've been disarmed, lost your wand, or your wand simply doesn't work any more, these 6 simple steps will get you back in battle in no time.",
       "author": "Gei Halogu",
       "alignment": "neutral",
-      "tags": ["equipment", "field_readiness", "wand"]
+      "tags": ["equipment", "combat", "wand"]
     },
     {
       "id": "book_to_battle",
@@ -189,10 +189,10 @@
       "color": "blue",
       "height": "medium",
       "width": "thick",
-      "description": "A guide to picking the right tools before combat",
+      "description": "It is a blue book titled \"To Battle!\", filled with inventory lists and descriptions. A guide to picking the right tools before combat.",
       "author": "Wai Meridi",
       "alignment": "neutral",
-      "tags": ["equipment"]
+      "tags": ["equipment", "combat"]
     },
     {
       "id": "book_enchantments_for_superior_gear",
@@ -200,10 +200,10 @@
       "color": "magenta",
       "height": "tiny",
       "width": "wide",
-    "description": "A comprehensive guide to all useful enchantments from invisibility to   water-breathing to lava-walking and more",
+    "description": "It is a small reference book titled \"1001 Enchantments for Superior Gear\". It is a comprehensive guide to all useful enchantments from invisibility to water-breathing to lava-walking and more",
       "author": "Hai Erana",
       "alignment": "neutral",
-      "tags": ["equipment", "spell", "maintenance"]
+      "tags": ["equipment", "spell", "enchantment", "maintenance"]
     },
     {
       "id": "book_dress_sense_for_every_wizard",
@@ -211,7 +211,7 @@
       "color": "violet",
       "height": "medium",
       "width": "medium",
-    "description": "Reze Gavrola reveals the secrets of style in this timeless classic. From accessories to robes and more, Gavrola's expertise will make sure every wizard knows the   fundamentals of good taste.",
+    "description": "It is a stylized book titled \"Dress Sense for Every Wizard\", wrapped in a velvet carrying cloth. Reze Gavrola reveals the secrets of style in this timeless classic. From accessories to robes and more, Gavrola's expertise will make sure every wizard knows the fundamentals of good taste.",
       "author": "Reze Gavrola",
       "alignment": "neutral",
       "tags": ["equipment", "fashion"]
@@ -222,10 +222,10 @@
       "color": "yellow",
       "height": "short",
       "width": "medium",
-      "description": "A poor man's guide to buying clothes on a budget",
+      "description": "It is a book titled \"I Can Buy That!\" in offset block letters with poor kerning. A poor wizard's guide to buying robes on a budget.",
       "author": "Vewo Onoha",
       "alignment": "neutral",
-      "tags": ["equipment", "budget"]
+      "tags": ["equipment", "fashion"]
     }
   ]
 }

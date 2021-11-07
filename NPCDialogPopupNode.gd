@@ -18,9 +18,9 @@ func hide():
 	self.visible = false
 
 func _on_offer_book_pressed():
-	# TODO: 
-	# GameManager.focus_on_inventory()
-	GameManager.focus_out_of_dialog()
+	GameManager.select_book_to_offer()
+	# maybe try to keep it open?
+	# GameManager.focus_out_of_dialog()
 	hide()
 
 func _on_exit_dialog_pressed():

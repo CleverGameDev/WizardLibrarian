@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://graphics/townfolk1_m.png" type="Texture" id=1]
 [ext_resource path="res://objects/BookManager.gd" type="Script" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://QuestManager.gd" type="Script" id=9]
 [ext_resource path="res://ShelveOrUnshelvePopupNode.gd" type="Script" id=10]
 [ext_resource path="res://addons/GameTemplate/GUI/Buttons/DefaultButton.tscn" type="PackedScene" id=11]
+[ext_resource path="res://graphics/right-arrow.png" type="Texture" id=12]
+[ext_resource path="res://InventoryNode.gd" type="Script" id=13]
 
 [sub_resource type="GDScript" id=1]
 script/source = "# This class does everything
@@ -19,7 +21,7 @@ extends YSort
 # determines if left/right/up/down moves the player, 
 # or currently selected shelf/book
 # inner ui focus = menu like select a book, shelve/unshelve book,
-enum Focus {PLAYER_FOCUS, BOOKCASE_FOCUS, BOOKSHELF_FOCUS, INNER_UI_FOCUS, DIALOG_FOCUS}
+enum Focus {PLAYER_FOCUS, BOOKCASE_FOCUS, BOOKSHELF_FOCUS, INNER_UI_FOCUS, DIALOG_FOCUS, INVENTORY_FOCUS}
 var current_focus = Focus.PLAYER_FOCUS
 var previous_focus_before_menu = Focus.PLAYER_FOCUS
 
@@ -64,17 +66,16 @@ func view_bookcase(body):
 	body.zoom_in()
 	current_bookcase = body
 
-
 # when interacting with a bookshelf, wizard can shelve or unshelve
 func do_action_on_bookshelf():
-	var has_book = $Player.carrying_books.size() > 0
+	var has_book = $InventoryManager.carrying_books.size() > 0
 	var can_grab_book = current_bookcase.can_grab_book()
 	# case: has book, also book on shelf. check if they mean to shelve/unshelve
 	if has_book && can_grab_book:
 		open_shelve_or_unshelve()
 	# case: has book, no book on shelf. always shelve.
 	elif has_book && !can_grab_book:
-		shelve_book()
+		start_shelve_book()
 	# case: no book, book on shelf. always unshelve.
 	elif !has_book && can_grab_book:
 		grab_book()
@@ -82,26 +83,32 @@ func do_action_on_bookshelf():
 	else:
 		pass
 
-
 func grab_book():
 	var book_id = current_bookcase.grab_current_book()
-	$Player.add_book_to_inventory(book_id)
+	$InventoryManager.add_book_to_inventory(book_id)
 
 func open_shelve_or_unshelve():
 	previous_focus_before_menu = current_focus
 	current_focus = Focus.INNER_UI_FOCUS
 	$ShelveOrUnshelvePopupNode.show()
 
-# triggered when we shelve a book
-func shelve_book():
-	var book_id = $Player.pop_first_book()
+# triggered when we select 'shelve a book'
+func start_shelve_book():
+	if len($InventoryManager.carrying_books) == 1:
+		var book_id = $InventoryManager.pop_first_book()
+		pick_book_to_shelve(book_id)
+	elif len($InventoryManager.carrying_books) > 1:
+		focus_on_inventory($InventoryManager.Mode.SHELVING)
+
+func pick_book_to_shelve(book_id):
 	if !book_id:
 		print(\"how did we get here!!!\")
 		return
 	current_bookcase.shelve_book(book_id)
+	current_focus = Focus.BOOKSHELF_FOCUS
 	$BookManager.shelve_book(book_id)
 	# if we have no books on floor, do a new quest
-	if $Player.carrying_books.size() == 0 && $BookManager.books_on_floor.size() == 0:
+	if $InventoryManager.carrying_books.size() == 0 && $BookManager.books_on_floor.size() == 0:
 		ready_for_new_npc = !npc_is_here
 
 func focus_out_of_inner_ui():
@@ -124,10 +131,40 @@ func focus_out_of_bookcase():
 func focus_on_dialog():
 	current_focus = Focus.DIALOG_FOCUS
 
+func focus_on_inventory(mode):
+	current_focus = Focus.INVENTORY_FOCUS
+	$InventoryManager.focus_on_self(mode)
+
+func select_book_to_offer():
+	focus_on_inventory($InventoryManager.Mode.OFFER_TO_NPC)
+
+func offer_book_to_npc(book_id):
+	current_npc.offer_book_id(book_id)
+
+func accept_inventory_book():
+	var book_id = $InventoryManager.get_and_remove_selected_book_id()
+	if book_id == null:
+		focus_out_of_inventory()
+	if $InventoryManager.current_mode == $InventoryManager.Mode.SHELVING:
+		pick_book_to_shelve(book_id)
+	elif $InventoryManager.current_mode == $InventoryManager.Mode.OFFER_TO_NPC:
+		offer_book_to_npc(book_id)
+	$InventoryManager.focus_out_of_self()
+
 func focus_out_of_dialog():
 	current_focus = Focus.PLAYER_FOCUS
 	current_npc.hide_dialog()
 	
+# on ui_cancel ---
+func focus_out_of_inventory():
+	# TODO: focus back on dialog?
+	if $InventoryManager.current_mode == $InventoryManager.Mode.EXAMINE:
+		current_focus = Focus.PLAYER_FOCUS
+	elif $InventoryManager.current_mode == $InventoryManager.Mode.SHELVING:
+		current_focus = Focus.INNER_UI_FOCUS
+	elif $InventoryManager.current_mode == $InventoryManager.Mode.OFFER_TO_NPC:
+		focus_on_dialog()
+	$InventoryManager.focus_out_of_self()
 
 func focus_on_bookshelf():
 	current_focus = Focus.BOOKSHELF_FOCUS
@@ -148,6 +185,9 @@ func _input(event)->void:
 		elif current_focus == Focus.BOOKCASE_FOCUS:
 			focus_out_of_bookcase()
 			get_tree().set_input_as_handled()
+		elif current_focus == Focus.INVENTORY_FOCUS:
+			focus_out_of_inventory()
+			get_tree().set_input_as_handled()
 		elif current_focus == Focus.DIALOG_FOCUS:
 			focus_out_of_dialog()
 			get_tree().set_input_as_handled()
@@ -158,7 +198,12 @@ func _input(event)->void:
 		elif current_focus == Focus.BOOKSHELF_FOCUS:
 			do_action_on_bookshelf()
 			get_tree().set_input_as_handled()
+		elif current_focus == Focus.INVENTORY_FOCUS:
+			accept_inventory_book()
+			get_tree().set_input_as_handled()
 	# selecting a shelf on the bookcase
+	elif event.is_action_pressed(\"inventory\"):
+		focus_on_inventory($InventoryManager.Mode.EXAMINE)
 	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed(\"ui_left\"):
 		current_bookcase.shift_selected_bookcase_index(-1)
 		get_tree().set_input_as_handled()
@@ -170,6 +215,12 @@ func _input(event)->void:
 		get_tree().set_input_as_handled()
 	elif current_focus == Focus.BOOKCASE_FOCUS && event.is_action_pressed(\"ui_down\"):
 		current_bookcase.shift_selected_bookcase_index(2)
+		get_tree().set_input_as_handled()
+	elif current_focus == Focus.INVENTORY_FOCUS && event.is_action_pressed(\"ui_up\"):
+		$InventoryManager.shift_selected_item(-1)
+		get_tree().set_input_as_handled()
+	elif current_focus == Focus.INVENTORY_FOCUS && event.is_action_pressed(\"ui_down\"):
+		$InventoryManager.shift_selected_item(1)
 		get_tree().set_input_as_handled()
 "
 
@@ -349,117 +400,117 @@ polygon = PoolVector2Array( 10, 0, 10, 0, 10, 28, 10, 28 )
 
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 0, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=5]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 36, 32, 36 )
+region = Rect2( 32, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=6]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 36, 32, 36 )
+region = Rect2( 64, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 36, 32, 36 )
+region = Rect2( 32, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=8]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 108, 32, 36 )
+region = Rect2( 0, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 72, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=10]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 64, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=11]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 72, 32, 36 )
+region = Rect2( 0, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=12]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 108, 32, 36 )
+region = Rect2( 32, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=13]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 108, 32, 36 )
+region = Rect2( 64, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=14]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 108, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=15]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 32, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=16]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 36, 32, 36 )
+region = Rect2( 0, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=17]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 32, 36 )
+region = Rect2( 32, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=18]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 0, 32, 36 )
+region = Rect2( 64, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 0, 32, 36 )
+region = Rect2( 32, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 0, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="SpriteFrames" id=21]
 animations = [ {
-"frames": [ SubResource( 4 ) ],
-"loop": true,
-"name": "default",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 5 ), SubResource( 6 ), SubResource( 7 ) ],
+"frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
 "loop": true,
 "name": "east",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 8 ) ],
+"frames": [ SubResource( 7 ) ],
 "loop": true,
 "name": "idle_west",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ) ],
+"frames": [ SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
 "loop": true,
 "name": "south",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ],
+"frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ) ],
 "loop": true,
 "name": "west",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 15 ) ],
+"frames": [ SubResource( 14 ) ],
 "loop": true,
 "name": "idle_south",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 16 ) ],
+"frames": [ SubResource( 15 ) ],
 "loop": true,
 "name": "idle_east",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
+"frames": [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
 "loop": true,
 "name": "north",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 20 ) ],
+"frames": [ SubResource( 19 ) ],
 "loop": true,
 "name": "idle_north",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 20 ) ],
+"loop": true,
+"name": "default",
 "speed": 5.0
 } ]
 
@@ -557,12 +608,13 @@ extents = Vector2( 15.5637, 29.3808 )
 [node name="GameManager" type="YSort" parent="."]
 script = SubResource( 1 )
 
-[node name="InventoryNode" type="Node2D" parent="GameManager"]
+[node name="InventoryManager" type="Node2D" parent="GameManager"]
 position = Vector2( 8, 64 )
 scale = Vector2( 2, 2 )
 z_index = 1
+script = ExtResource( 13 )
 
-[node name="PopupBackground" type="ColorRect" parent="GameManager/InventoryNode"]
+[node name="PopupBackground" type="ColorRect" parent="GameManager/InventoryManager"]
 margin_right = 132.0
 margin_bottom = 224.0
 color = Color( 0.207843, 0.207843, 0.207843, 1 )
@@ -570,19 +622,45 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="InventoryText" type="Label" parent="GameManager/InventoryNode"]
-anchor_left = 1.36364
-anchor_top = 0.142857
-anchor_right = 1.36364
-anchor_bottom = 0.142857
-margin_right = 120.0
-margin_bottom = 204.0
+[node name="InventoryText" type="Label" parent="GameManager/InventoryManager"]
+margin_right = 131.0
+margin_bottom = 39.0
 theme = ExtResource( 8 )
 text = "Inventory
 "
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameManager/InventoryManager"]
+margin_top = 23.0
+margin_right = 130.0
+margin_bottom = 221.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SelectionNode" type="Node2D" parent="GameManager/InventoryManager"]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="GameManager/InventoryManager/SelectionNode"]
+position = Vector2( 0.5, 0 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 12 )
+
+[node name="CurrentBookLabel" type="Label" parent="GameManager/InventoryManager"]
+margin_left = 147.0
+margin_top = 199.0
+margin_right = 343.0
+margin_bottom = 265.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource( 8 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
 }
 
 [node name="TileMap" type="TileMap" parent="GameManager"]

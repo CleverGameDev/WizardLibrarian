@@ -19,7 +19,7 @@ func hide():
 
 func _on_shelve_pressed():
 	GameManager.focus_out_of_inner_ui()
-	GameManager.shelve_book()
+	GameManager.start_shelve_book()
 	hide()
 
 func _on_unshelve_pressed():
