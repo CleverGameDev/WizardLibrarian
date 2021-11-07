@@ -3,6 +3,7 @@ extends Node2D
 
 var carrying_books = []
 var BookManager
+var DescriptionNode
 # examine, shelving, or offer_to_NPC
 enum Mode {NONE, EXAMINE, SHELVING, OFFER_TO_NPC}
 var current_mode = Mode.NONE
@@ -12,6 +13,7 @@ var current_book_index = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	BookManager = get_parent().get_node("BookManager")
+	DescriptionNode = get_parent().get_node("DescriptionNode").get_node("CurrentDescription")
 	pass # Replace with function body.
 
 func redraw_inventory():
@@ -35,7 +37,7 @@ func pop_first_book():
 func focus_out_of_self():
 	current_mode = Mode.NONE
 	$SelectionNode.visible = false
-	$CurrentBookLabel.text = ""
+	DescriptionNode.text = ""
 	pass
 
 func get_and_remove_selected_book_id():
@@ -58,9 +60,9 @@ func focus_on_self(mode):
 func redraw_book_label():
 	if current_book_index < $VBoxContainer.get_child_count():
 		var book = BookManager.get_book_by_id(carrying_books[current_book_index])
-		$CurrentBookLabel.text = book.description
+		DescriptionNode.text = book.description
 	else:
-		$CurrentBookLabel.text = ""
+		DescriptionNode.text = ""
 
 func set_selection_node_to_index(index):
 	if index > len(carrying_books):

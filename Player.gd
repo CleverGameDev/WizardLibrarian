@@ -22,6 +22,9 @@ func _ready():
 	BookManager = get_parent().get_node("BookManager")
 	InventoryManager = get_parent().get_node("InventoryManager")
 
+func set_description(text):
+	get_parent().get_node("DescriptionNode/CurrentDescription").text = text
+
 func interact_with_nearby_objects():
 	for body in $PickupArea.get_overlapping_bodies():
 		if ("object_type" in body && body.object_type == "Bookcase"):
@@ -34,6 +37,23 @@ func interact_with_nearby_objects():
 		elif ("object_type" in body && body.object_type == "NPC"):
 			body.talk()
 			return
+		elif ("object_type" in body && body.object_type == "desk"):
+			set_description(body.get_description())
+
+func view_nearby_objects():
+	for body in $PickupArea.get_overlapping_bodies():
+		if ("object_type" in body && body.object_type == "Bookcase"):
+			set_description(body.description)
+			return
+		elif ("object_type" in body && body.object_type == "Book"):
+			set_description(body.attributes["description"])
+			return
+		elif ("object_type" in body && body.object_type == "desk"):
+			set_description(body.get_description())
+			return
+		else:
+			set_description("")
+
 
 func _input(event)->void:
 	if event.is_action_pressed("ui_accept"):
@@ -43,6 +63,7 @@ func _input(event)->void:
 
 func _physics_process (delta):
 	vel = Vector2()
+	view_nearby_objects()
 	# inputs
 	if (GameManager.is_player_focus()):
 		move_player()

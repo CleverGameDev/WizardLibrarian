@@ -7,6 +7,7 @@ var object_type = "Bookcase"
 # var b = "text"
 
 var old_position
+var description = "An empty bookcase"
 
 const NUM_BOOKSHELVES = 8
 
@@ -64,6 +65,7 @@ func zoom_out_bookshelf():
 	zoom_in()
 
 func shelve_book(book_id):
+	description = "An uncategorized bookcase"
 	bookshelves[current_shelf_index].shelve_book(book_id)
 
 func shift_selected_bookcase_index(delta):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://graphics/townfolk1_m.png" type="Texture" id=1]
 [ext_resource path="res://objects/BookManager.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://addons/GameTemplate/GUI/Buttons/DefaultButton.tscn" type="PackedScene" id=11]
 [ext_resource path="res://graphics/right-arrow.png" type="Texture" id=12]
 [ext_resource path="res://InventoryNode.gd" type="Script" id=13]
+[ext_resource path="res://Desk.gd" type="Script" id=14]
 
 [sub_resource type="GDScript" id=1]
 script/source = "# This class does everything
@@ -119,7 +120,6 @@ func focus_out_of_bookshelf():
 	current_bookcase.zoom_out_bookshelf()
 	current_focus = Focus.BOOKCASE_FOCUS
 
-
 func focus_out_of_bookcase():
 	$BookcasePopupNode.visible = false
 	current_bookcase.zoom_out()
@@ -161,7 +161,7 @@ func focus_out_of_inventory():
 	if $InventoryManager.current_mode == $InventoryManager.Mode.EXAMINE:
 		current_focus = Focus.PLAYER_FOCUS
 	elif $InventoryManager.current_mode == $InventoryManager.Mode.SHELVING:
-		current_focus = Focus.INNER_UI_FOCUS
+		current_focus = Focus.BOOKSHELF_FOCUS
 	elif $InventoryManager.current_mode == $InventoryManager.Mode.OFFER_TO_NPC:
 		focus_on_dialog()
 	$InventoryManager.focus_out_of_self()
@@ -400,117 +400,117 @@ polygon = PoolVector2Array( 10, 0, 10, 0, 10, 28, 10, 28 )
 
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 36, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=5]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 36, 32, 36 )
+region = Rect2( 0, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=6]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 36, 32, 36 )
+region = Rect2( 32, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 108, 32, 36 )
+region = Rect2( 64, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=8]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 72, 32, 36 )
+region = Rect2( 32, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 0, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=10]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 72, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=11]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 108, 32, 36 )
+region = Rect2( 64, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=12]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 108, 32, 36 )
+region = Rect2( 0, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=13]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 108, 32, 36 )
+region = Rect2( 32, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=14]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 64, 108, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=15]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 36, 32, 36 )
+region = Rect2( 32, 72, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=16]
 atlas = ExtResource( 1 )
-region = Rect2( 0, 0, 32, 36 )
+region = Rect2( 32, 36, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=17]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 0, 32, 36 )
+region = Rect2( 0, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=18]
 atlas = ExtResource( 1 )
-region = Rect2( 64, 0, 32, 36 )
+region = Rect2( 32, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 0, 32, 36 )
+region = Rect2( 64, 0, 32, 36 )
 
 [sub_resource type="AtlasTexture" id=20]
 atlas = ExtResource( 1 )
-region = Rect2( 32, 72, 32, 36 )
+region = Rect2( 32, 0, 32, 36 )
 
 [sub_resource type="SpriteFrames" id=21]
 animations = [ {
-"frames": [ SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"frames": [ SubResource( 4 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 5 ), SubResource( 6 ), SubResource( 7 ) ],
 "loop": true,
 "name": "east",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 7 ) ],
+"frames": [ SubResource( 8 ) ],
 "loop": true,
 "name": "idle_west",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
+"frames": [ SubResource( 9 ), SubResource( 10 ), SubResource( 11 ) ],
 "loop": true,
 "name": "south",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 11 ), SubResource( 12 ), SubResource( 13 ) ],
+"frames": [ SubResource( 12 ), SubResource( 13 ), SubResource( 14 ) ],
 "loop": true,
 "name": "west",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 14 ) ],
+"frames": [ SubResource( 15 ) ],
 "loop": true,
 "name": "idle_south",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 15 ) ],
+"frames": [ SubResource( 16 ) ],
 "loop": true,
 "name": "idle_east",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
+"frames": [ SubResource( 17 ), SubResource( 18 ), SubResource( 19 ) ],
 "loop": true,
 "name": "north",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 19 ) ],
-"loop": true,
-"name": "idle_north",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 20 ) ],
 "loop": true,
-"name": "default",
+"name": "idle_north",
 "speed": 5.0
 } ]
 
@@ -610,7 +610,6 @@ script = SubResource( 1 )
 
 [node name="InventoryManager" type="Node2D" parent="GameManager"]
 position = Vector2( 8, 64 )
-scale = Vector2( 2, 2 )
 z_index = 1
 script = ExtResource( 13 )
 
@@ -649,11 +648,21 @@ position = Vector2( 0.5, 0 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="CurrentBookLabel" type="Label" parent="GameManager/InventoryManager"]
-margin_left = 147.0
-margin_top = 199.0
-margin_right = 343.0
-margin_bottom = 265.0
+[node name="TileMap" type="TileMap" parent="GameManager"]
+scale = Vector2( 2, 2 )
+tile_set = SubResource( 3 )
+cell_size = Vector2( 16, 16 )
+cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+format = 1
+tile_data = PoolIntArray( 262153, 4, 0, 262156, 5, 0, 262159, 4, 0, 262165, 7, 0, 393225, 8, 0, 393227, 10, 0, 393229, 10, 0, 393231, 10, 0, 393233, 10, 0, 393235, 10, 0, 393237, 9, 0, 524297, 8, 0, 524299, 10, 0, 524301, 10, 0, 524303, 10, 0, 524305, 10, 0, 524307, 10, 0, 524309, 9, 0, 655369, 8, 0, 655371, 10, 0, 655373, 10, 0, 655375, 10, 0, 655377, 10, 0, 655379, 10, 0, 655381, 9, 0, 786441, 4, 0, 786447, 4, 0, 786453, 7, 0 )
+
+[node name="DescriptionNode" type="Node2D" parent="GameManager"]
+
+[node name="CurrentDescription" type="Label" parent="GameManager/DescriptionNode"]
+margin_left = 279.0
+margin_top = 459.0
+margin_right = 718.0
+margin_bottom = 581.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource( 8 )
@@ -662,14 +671,6 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="TileMap" type="TileMap" parent="GameManager"]
-scale = Vector2( 2, 2 )
-tile_set = SubResource( 3 )
-cell_size = Vector2( 16, 16 )
-cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
-format = 1
-tile_data = PoolIntArray( 262153, 4, 0, 262156, 5, 0, 262159, 4, 0, 262165, 7, 0, 393225, 8, 0, 393227, 10, 0, 393229, 10, 0, 393231, 10, 0, 393233, 10, 0, 393235, 10, 0, 393237, 9, 0, 524297, 8, 0, 524299, 10, 0, 524301, 10, 0, 524303, 10, 0, 524305, 10, 0, 524307, 10, 0, 524309, 9, 0, 655369, 8, 0, 655371, 10, 0, 655373, 10, 0, 655375, 10, 0, 655377, 10, 0, 655379, 10, 0, 655381, 9, 0, 786441, 4, 0, 786447, 4, 0, 786453, 7, 0 )
 
 [node name="Player" type="KinematicBody2D" parent="GameManager"]
 position = Vector2( 552, 280 )
@@ -810,6 +811,7 @@ text = "Unshelve"
 script = ExtResource( 9 )
 
 [node name="Desk" type="StaticBody2D" parent="GameManager"]
+script = ExtResource( 14 )
 
 [node name="Sprite" type="Sprite" parent="GameManager/Desk"]
 position = Vector2( 364.101, 217.873 )
