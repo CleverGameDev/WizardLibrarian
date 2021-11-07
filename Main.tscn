@@ -114,6 +114,7 @@ func pick_book_to_shelve(book_id):
 
 func focus_out_of_inner_ui():
 	current_focus = previous_focus_before_menu
+	$ShelveOrUnshelvePopupNode.hide()
 
 func focus_out_of_bookshelf():
 	$BookcasePopupNode.visible = true
@@ -190,6 +191,9 @@ func _input(event)->void:
 			get_tree().set_input_as_handled()
 		elif current_focus == Focus.DIALOG_FOCUS:
 			focus_out_of_dialog()
+			get_tree().set_input_as_handled()
+		elif current_focus == Focus.INNER_UI_FOCUS:
+			focus_out_of_inner_ui()
 			get_tree().set_input_as_handled()
 	elif event.is_action_pressed(\"ui_accept\"):
 		if current_focus == Focus.BOOKCASE_FOCUS:
